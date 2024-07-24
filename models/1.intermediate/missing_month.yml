@@ -1,0 +1,22 @@
+models:
+  - name: missing_month
+    description: The 'missing_month' model is designed to filter out specific data
+      from the 'data_generator' model. It selects distinct company names,
+      countries, and the month part of the date from the 'data_generator' table.
+      The model then filters out data for specific companies in specific
+      countries for specific date ranges. For example, it filters out data for
+      the company 'FB' in the country 'CA' for the date range between
+      '2019-05-01' and '2019-07-05'. It also filters out data for all companies
+      for the date range between '2022-05-01' and '2022-08-05'. Additionally, it
+      filters out data for all companies in the country 'DE' for the date range
+      between '2019-09-07' and '2019-11-09'. Finally, it filters out data for
+      the company 'AMZN' for the date range between '2019-01-07' and
+      '2019-09-09'. The output of the model is the remaining data after these
+      filters have been applied.
+    columns:
+      - name: company_name
+        data_type: varchar
+      - name: country
+        data_type: varchar
+      - name: date_year
+        data_type: date

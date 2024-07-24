@@ -1,0 +1,23 @@
+
+name: 'dbt_utils_medley'
+version: '0.1.0'
+
+profile: 'dbt_utils_medley'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+require-dbt-version: [">=1.6.0", "<2.0.0"]
+
+models:
+  dbt_utils_medley:
+    # Config indicated by + and applies to all files under models/example/
+    +materialized: view

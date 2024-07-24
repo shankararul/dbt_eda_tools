@@ -1,0 +1,15 @@
+models:
+  - name: missing_year
+    description: "The 'missing_year' model is designed to filter out specific data
+      from the 'data_generator' model. It selects distinct company names,
+      countries, and years from the data. The model then filters out data based
+      on specific conditions. These conditions include specific date ranges for
+      certain companies in certain countries, as well as general date ranges.
+      The filtered data is then selected for the final output.  "
+    columns:
+      - name: company_name
+        data_type: varchar
+      - name: country
+        data_type: varchar
+      - name: date_year
+        data_type: date
