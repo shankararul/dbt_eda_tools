@@ -1,0 +1,20 @@
+version: 2
+macros:
+  - name: get_missing_date
+    description: The macro calculates all the missing dates in the model for the specificied dimensions and input filter conditions.
+    arguments:
+      - name: model_name
+        type: string
+        description: The DBT model which needs to be inspected for missing dates.
+      - name: date_col
+        type: string
+        description: The date column that needs to be inspected.
+      - name: dimensions
+        type: string
+        description: Can be a tuple or single column.
+      - name: filters
+        type: string
+        description: A dictionary with the columns that need to be filtered if needed.
+      - name: expected_frequency
+        type: string
+        description: Expected time frequency of dates. Ex MONTH, YEAR, DAY etc.

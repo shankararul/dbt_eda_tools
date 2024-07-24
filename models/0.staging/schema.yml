@@ -1,0 +1,24 @@
+models:
+  - name: data_generator
+    description: Generates dates between 2019 and 2025 and cross joins it with
+      companies and countries to create a test dataset
+    columns:
+      - name: date_day
+        description: "This column represents the date for each record. The dates are
+          generated starting from '2019-01-01' and ending at '2025-01-01'.  "
+        data_type: date
+      - name: company_name
+        description: This column represents the name of the company. The company names
+          are hardcoded in the SQL and include 'MSFT', 'GOG', 'AMZN', 'A', and
+          'FB'.
+        data_type: varchar
+      - name: country
+        description: This column represents the country code. The country codes are
+          hardcoded in the SQL and include 'FR', 'DE', 'GB', 'US', and 'CA'.
+        data_type: varchar
+      - name: str_length
+        description: This column represents the sum of the lengths of the 'company_name'
+          and 'country' columns. It is calculated by adding the number of
+          characters in the 'company_name' column to the number of characters in
+          the 'country' column.
+        data_type: number

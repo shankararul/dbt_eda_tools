@@ -1,0 +1,20 @@
+models:
+  - name: missing_day
+    description: The 'missing_day' model is a SQL-based model that filters data
+      from the 'data_generator' model. The model
+      filters out specific date ranges for certain companies in specific
+      countries. The filtered companies and countries include 'FB' in 'CA'
+      between '2019-05-01' and '2019-05-17', 'GOOG' in 'FR' between '2020-01-01'
+      and '2020-05-01', 'AAPL' in 'US' between '2021-12-15' and '2021-12-26',
+      all companies and countries between '2022-05-01' and '2022-05-05', all
+      companies in 'DE' between '2019-09-07' and '2019-09-09', and 'AMZN' on any
+      date between '2019-09-07' and '2019-09-09'.
+    columns:
+      - name: date_day
+        data_type: date
+      - name: company_name
+        data_type: varchar
+      - name: country
+        data_type: varchar
+      - name: str_length
+        data_type: number
