@@ -16,10 +16,9 @@
         , ['country','company_name']
         , {
             'country': ('DE','US')
-            , 'company_name': 'MSFT'
-            , 'str_length': '=2'
+            , 'company_name': ('GOG','A')
+            , 'str_length': '=3'
         }
         , 'DAY'
     )
 }}
--- Returns zero rows as there are no rows with str_lengh = 2
