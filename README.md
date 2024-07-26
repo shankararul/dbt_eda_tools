@@ -1,15 +1,15 @@
-Welcome to your new dbt project!
+![dbt_utils_medley.png](./images/dbt_utils_medley_.png)
 
-### Using the starter project
+<p align="center">
+    <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
+    <img alt="Static Badge" src="https://img.shields.io/badge/dbt-package-orange">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/shankararul/dbt_utils_medley">
+    <img alt="GitHub (Pre-)Release Date" src="https://img.shields.io/github/release-date-pre/shankararul/dbt_utils_medley">
+</p>
 
-Try running the following commands:
-- dbt run
-- dbt test
-
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+<p align="center">
+    <img src="https://img.shields.io/circleci/project/github/badges/shields/master" alt="build status">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/shankararul/dbt_utils_medley">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/shankararul/dbt_utils_medley">
+    <img src="https://img.shields.io/github/contributors/shankararul/dbt_utils_medley" />
+</p>
