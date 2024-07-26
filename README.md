@@ -1,4 +1,4 @@
-<img src="./images/dbt_utils_medley_black.png" alt="dbt_utils_medley_logo" style='display:block; margin-left: auto;margin-right: auto; width:42%' height="auto">
+<img align="center" src="./images/dbt_utils_medley_black.png" alt="dbt_utils_medley_logo" style='display:block; margin-left: auto;margin-right: auto; max-width:42%' height="auto">
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
