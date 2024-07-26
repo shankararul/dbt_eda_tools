@@ -15,16 +15,28 @@
 </p>
 
 # DBT Utils Medley
-## A Medley or Potpourri of macros that could be handy for your dbt projects.
+## A medley or potpourri of macros that could be handy for your dbt projects.
 
 ✅ Get Missing Dates
-`Finds all the missing dates in a model for the specified dimensions and filters according to the time granualarity expected`
+`Finds all the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
-🚧 Fill Missing Dates
-`Fills the missing dates in a model for the specified dimensions and filters according to the time granualarity expected`
+🚧 Fill Missing Dates (Coming soon)
+`Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
-🚧 Show as Percentage
+🚧 Show as Percentage (Coming soon)
 `Shows the value as percentage of the total value for the specified aggregations`
+
+🚧 Exploratory data analysis (Coming soon)
+
+> Numeric column exploration
+`Get summary statistics such as Min, Max, Median, Null values, Percentiles, Standard deviation, etc. for numeric columns`
+
+> Categoric column exploration
+`Get summary statistics such as Count, Unique values, Null values for categoric columns`
+
+> Timeseries column exploration
+`Get summary statistics such as Start date, End date, granularity of the timeseries (day,month,year), null values, missing dates for timeseries columns`
+
 
 | DB | Status |
 | ------ | ------ |
@@ -59,7 +71,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ### [Example 1](examples/public/get_missing_dates_ex1.sql)
 > ➡️ Input
 ```sh
-{{get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
+{{dbt_utils_medley.get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
 ```
 
 > ⬅️ Output
@@ -80,7 +92,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ### [Example 2](examples/public/get_missing_dates_ex2.sql)
 > ➡️ Input
 ```sh
-{{get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
+{{dbt_utils_medley.get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
 ```
 
 > ⬅️ Output
@@ -108,7 +120,7 @@ DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
 ```sh
 
 {{
-    get_missing_date(
+    dbt_utils_medley.get_missing_date(
         'missing_day'
         ,'date_day'
         , ['country','company_name']
