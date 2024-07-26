@@ -139,3 +139,6 @@ DATE_DAY	| COUNTRY	| COMPANY_NAME	| NEXT_DATE_DAY	| MISSING_DAY
  ```
 
 💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
+
+# 🔧 Contribution
+If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.
