@@ -56,7 +56,7 @@ packages:
 get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ```
 
-### [Example 1](examples/get_missing_dates_ex1)
+### [Example 1](examples/public/get_missing_dates_ex1.sql)
 > ➡️ Input
 ```sh
 {{get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
@@ -77,7 +77,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
  Returns 1 row with the missing dates
  ```
 
-### [Example 2](examples/get_missing_dates_ex2)
+### [Example 2](examples/public/get_missing_dates_ex2.sql)
 > ➡️ Input
 ```sh
 {{get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
@@ -103,7 +103,7 @@ DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
  Returns 6 rows with the missing dates
  ```
 
-### [Example 3](examples/get_missing_dates_ex3)
+### [Example 3](examples/public/get_missing_dates_ex3.sql)
 > ➡️ Input
 ```sh
 
@@ -138,4 +138,4 @@ DATE_DAY	| COUNTRY	| COMPANY_NAME	| NEXT_DATE_DAY	| MISSING_DAY
  Returns 3 rows with the missing dates
  ```
 
-💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=2'](examples/get_missing_dates_ex4) or '!=2'
+💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
