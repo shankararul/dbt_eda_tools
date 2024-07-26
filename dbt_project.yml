@@ -4,7 +4,7 @@ version: '0.1.0'
 
 profile: 'dbt_utils_medley'
 
-model-paths: ["models"]
+model-paths: ["examples"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
