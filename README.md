@@ -15,7 +15,7 @@
 </p>
 
 # dbt_eda_tools
-## A medley of macros that could be handy for your data expoloration in DBT.
+## A medley of macros that could be handy for your data exploration in DBT.
 
 ✅ Get Missing Dates
 `Finds all the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
