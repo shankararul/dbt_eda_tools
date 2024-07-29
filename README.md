@@ -1,21 +1,21 @@
-<img align="center" src="./images/dbt_utils_medley_black.png" alt="dbt_utils_medley_logo" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+<img align="center" src="./images/dbt_eda_tools_black.png" alt="dbt_eda_tools_logo" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
     <img alt="Static Badge" src="https://img.shields.io/badge/dbt-package-orange">
-    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/shankararul/dbt_utils_medley">
-    <img alt="GitHub (Pre-)Release Date" src="https://img.shields.io/github/release-date-pre/shankararul/dbt_utils_medley">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/shankararul/dbt_eda_tools">
+    <img alt="GitHub (Pre-)Release Date" src="https://img.shields.io/github/release-date-pre/shankararul/dbt_eda_tools">
 </p>
 
 <p align="center">
     <img src="https://img.shields.io/circleci/project/github/badges/shields/master" alt="build status">
-    <img alt="GitHub issues" src="https://img.shields.io/github/issues/shankararul/dbt_utils_medley">
-    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/shankararul/dbt_utils_medley">
-    <img src="https://img.shields.io/github/contributors/shankararul/dbt_utils_medley" />
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/shankararul/dbt_eda_tools">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/shankararul/dbt_eda_tools">
+    <img src="https://img.shields.io/github/contributors/shankararul/dbt_eda_tools" />
 </p>
 
-# DBT Utils Medley
-## A medley or potpourri of macros that could be handy for your dbt projects.
+# dbt_eda_tools
+## A medley of macros that could be handy for your data expoloration in DBT.
 
 ✅ Get Missing Dates
 `Finds all the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
@@ -46,18 +46,18 @@
 
 # 💾 Install
 
-`dbt_utils_medley` currently supports `dbt 1.6.x` or higher.
+`dbt_eda_tools` currently supports `dbt 1.6.x` or higher.
 
 Include in `packages.yml`
 
 ```yaml
 packages:
-  - package: shankararul/dbt_utils_medley
+  - package: shankararul/dbt_eda_tools
     version: ">=0.1.0"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-[Latest Release](https://github.com/shankararul/dbt_utils_medley/releases) of dbt_utils_medley
+[Latest Release](https://github.com/shankararul/dbt_eda_tools/releases) of dbt_eda_tools
 
 
 # 🔨 Examples
@@ -71,7 +71,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ### [Example 1](examples/public/get_missing_dates_ex1.sql)
 > ➡️ Input
 ```sh
-{{dbt_utils_medley.get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
+{{dbt_eda_tools.get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
 ```
 
 > ⬅️ Output
@@ -92,7 +92,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ### [Example 2](examples/public/get_missing_dates_ex2.sql)
 > ➡️ Input
 ```sh
-{{dbt_utils_medley.get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
+{{dbt_eda_tools.get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
 ```
 
 > ⬅️ Output
@@ -120,7 +120,7 @@ DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
 ```sh
 
 {{
-    dbt_utils_medley.get_missing_date(
+    dbt_eda_tools.get_missing_date(
         'missing_day'
         ,'date_day'
         , ['country','company_name']
