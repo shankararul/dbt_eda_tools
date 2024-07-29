@@ -1,8 +1,8 @@
 
-name: 'dbt_utils_medley'
+name: 'dbt_eda_tools'
 version: '0.1.0'
 
-profile: 'dbt_utils_medley'
+profile: 'dbt_eda_tools'
 
 model-paths: ["examples"]
 analysis-paths: ["analyses"]
@@ -18,6 +18,6 @@ clean-targets:
 require-dbt-version: [">=1.6.0", "<2.0.0"]
 
 models:
-  dbt_utils_medley:
+  dbt_eda_tools:
     # Config indicated by + and applies to all files under models/example/
     +materialized: view
