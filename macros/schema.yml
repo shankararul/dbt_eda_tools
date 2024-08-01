@@ -11,10 +11,26 @@ macros:
         description: The date column that needs to be inspected.
       - name: dimensions
         type: string
-        description: Can be a tuple or single column.
+        description: An array of dimensions as strings.
       - name: filters
         type: string
         description: A dictionary with the columns that need to be filtered if needed.
       - name: expected_frequency
         type: string
         description: Expected time frequency of dates. Ex MONTH, YEAR, DAY etc.
+
+  - name: percent_of_total
+    description: The macro calculates the percentage of total for the provided aggregation and column
+    arguments:
+      - name: column_to_aggregate
+        type: string
+        description: The column on which the percentages need to be computed
+      - name: aggregation
+        type: string
+        description: Can take a value of SUM, COUNT or COUNTDISTINCT. Defaults to count
+      - name: precision
+        type: integer
+        description: Number of decimal places to round the result. Defaults to 2.
+      - name: level
+        type: string
+        description: An array of columns to aggregate at the specified level.

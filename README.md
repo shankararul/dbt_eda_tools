@@ -20,11 +20,12 @@
 ✅ Get Missing Dates
 `Finds all the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
+✅ Show as Percentage
+`Shows the value as percentage of the total value for the specified aggregations`
+
 🚧 Fill Missing Dates (Coming soon)
 `Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
-🚧 Show as Percentage (Coming soon)
-`Shows the value as percentage of the total value for the specified aggregations`
 
 🚧 Exploratory data analysis (Coming soon)
 
@@ -151,6 +152,81 @@ DATE_DAY	| COUNTRY	| COMPANY_NAME	| NEXT_DATE_DAY	| MISSING_DAY
  ```
 
 💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
+
+### Show as Percent of total
+
+```sh
+percent_of_total(column_to_aggregate, aggregation,precision,level)
+```
+
+### [Example 1](examples/public/percent_of_total_ex1.sql)
+> ➡️ Input
+```sh
+SELECT
+    country
+    -- example: sum
+    , SUM(str_length) AS sum_2_str_length
+    , {{dbt_eda_tools.percent_of_total('str_length','sum',3)}} AS sum_percent
+
+    -- example: count
+    , COUNT(company_name) AS count_company_name
+    -- defaults to count if no aggregation function is specified and 1 decimal if no precision is specified
+    , {{dbt_eda_tools.percent_of_total('company_name', precision=3)}} AS count_percent
+
+FROM ref('data_aggregated')
+GROUP BY 1
+```
+
+> ⬅️ Output
+```sh
+
+| COUNTRY	| SUM_2_STR_LENGTH	| SUM_PERCENT	| COUNT_COMPANY_NAME	| COUNT_PERCENT	|
+-----------------------------------------------------------------------------------------
+| US	    | 24	            | 0.24	        | 5	                    | 0.238	        |
+| GB	    | 24	            | 0.24	        | 5	                    | 0.238	        |
+| FR	    | 10	            | 0.1	        | 2	                    | 0.095	        |
+| DE	    | 18	            | 0.18	        | 4	                    | 0.19	        |
+| CA	    | 24	            | 0.24	        | 5	                    | 0.238	        |
+
+```
+> 👓 Explanation
+ ```
+ The `sum_percent` column is the percentage of the total sum of the str_length column for each country. The `count_percent` column is the percentage of the total count of the company_name column for each country.
+ ```
+
+### [Example 2](examples/public/percent_of_total_ex2.sql)
+> ➡️ Input
+```sh
+SELECT
+    company_name
+    , country
+    , count(str_length) AS count_str_length
+    -- the percentages are caclulated at the aggregation of company_name and not entire column
+    , {{dbt_eda_tools.percent_of_total('str_length','count',3, ['company_name'])}} AS count_percent
+
+FROM {{ ref('data_aggregated') }}
+GROUP BY 1,2
+```
+
+> ⬅️ Output
+```sh
+
+COMPANY_NAME| COUNTRY	| COUNT_STR_LENGTH	| COUNT_PERCENT
+------------------------------------------------------------
+MSFT    	| CA	    | 1	                | 0.333
+MSFT    	| GB	    | 1	                | 0.333
+MSFT    	| US	    | 1	                | 0.333
+GOG        	| CA	    | 1	                | 0.25
+GOG     	| DE	    | 1	                | 0.25
+GOG        	| GB	    | 1	                | 0.25
+GOG     	| US	    | 1	                | 0.25
+---     	| --	    | -	                | -----
+---     	| --	    | -	                | -----
+```
+> 👓 Explanation
+ ```
+ The percentages are calculated at the level of company_name and not the entire column. Hence the percentages of MSFT sum to 1 and GOG sum to 1.
+ ```
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.
