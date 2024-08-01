@@ -170,7 +170,7 @@ SELECT
 
     -- example: count
     , COUNT(company_name) AS count_company_name
-    -- defaults to count if no aggregation function is specified and 1 decimal if no precision is specified
+    -- defaults to count if no aggregation function is specified and 2 decimals if no precision is specified
     , {{dbt_eda_tools.percent_of_total('company_name', precision=3)}} AS count_percent
 
 FROM ref('data_aggregated')
