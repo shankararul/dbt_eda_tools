@@ -54,7 +54,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: shankararul/dbt_eda_tools
-    version: ">=0.3.0"
+    version: ">=0.5.0"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
