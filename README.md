@@ -23,10 +23,6 @@
 ✅ Show as Percentage
 `Shows the value as percentage of the total value for the specified aggregations`
 
-🚧 Fill Missing Dates (Coming soon)
-`Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
-
-
 🚧 Exploratory data analysis (Coming soon)
 
 > Numeric column exploration
@@ -37,6 +33,9 @@
 
 > Timeseries column exploration
 `Get summary statistics such as Start date, End date, granularity of the timeseries (day,month,year), null values, missing dates for timeseries columns`
+
+🚧 Fill Missing Dates (Coming soon)
+`Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
 
 | DB | Status |
