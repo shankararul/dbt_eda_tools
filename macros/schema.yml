@@ -34,3 +34,17 @@ macros:
       - name: level
         type: string
         description: An array of columns to aggregate at the specified level.
+
+  - name: describe
+    description: The macro describes the structure of the dataset along with the column types. A loose and close implementation of pandas.describe().
+    arguments:
+      - name: model_name
+        type: string
+        description: The DBT model which needs to be described.
+
+  - name: fetch_information_metadata
+    description: The information_schema table which houses the table metadata lives in different locations in bigquery and snowflake. This macro returns the right paths to these tables based on the database.
+    arguments:
+      - name: model_name
+        type: string
+        description: The DBT model for which the information_schema needs to be fetched.

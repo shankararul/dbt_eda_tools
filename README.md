@@ -23,20 +23,22 @@
 ✅ Show as Percentage
 `Shows the value as percentage of the total value for the specified aggregations`
 
-🚧 Fill Missing Dates (Coming soon)
-`Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
+✅ Exploratory data analysis
 
+> ✅ describe()
+`Returns metadata on the model, including the number of rows, the number of columns, and the number of columns by data type (numeric, text, date...).`
 
-🚧 Exploratory data analysis (Coming soon)
-
-> Numeric column exploration
+> 🚧 Numeric column exploration (Coming soon)
 `Get summary statistics such as Min, Max, Median, Null values, Percentiles, Standard deviation, etc. for numeric columns`
 
-> Categoric column exploration
+> 🚧 Categoric column exploration (Coming soon)
 `Get summary statistics such as Count, Unique values, Null values for categoric columns`
 
-> Timeseries column exploration
+> 🚧 Timeseries column exploration (Coming soon)
 `Get summary statistics such as Start date, End date, granularity of the timeseries (day,month,year), null values, missing dates for timeseries columns`
+
+🚧 Fill Missing Dates (Coming soon)
+`Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
 
 | DB | Status |
@@ -54,7 +56,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: shankararul/dbt_eda_tools
-    version: ">=0.5.0"
+    version: ">=0.6.0"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
@@ -69,7 +71,7 @@ packages:
 get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ```
 
-### [Example 1](examples/public/get_missing_dates_ex1.sql)
+### [Example 1](examples/public/get_missing_dates/get_missing_dates_ex1.sql)
 > ➡️ Input
 ```sh
 {{dbt_eda_tools.get_missing_date('missing_day','date_day', [], {}, 'DAY')}}
@@ -90,7 +92,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
  Returns 1 row with the missing dates
  ```
 
-### [Example 2](examples/public/get_missing_dates_ex2.sql)
+### [Example 2](examples/public/get_missing_dates/get_missing_dates_ex2.sql)
 > ➡️ Input
 ```sh
 {{dbt_eda_tools.get_missing_date('missing_month','date_month', ['country'], {}, 'MONTH')}}
@@ -116,7 +118,7 @@ DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
  Returns 6 rows with the missing dates
  ```
 
-### [Example 3](examples/public/get_missing_dates_ex3.sql)
+### [Example 3](examples/public/get_missing_dates/get_missing_dates_ex3.sql)
 > ➡️ Input
 ```sh
 
@@ -159,7 +161,7 @@ DATE_DAY	| COUNTRY	| COMPANY_NAME	| NEXT_DATE_DAY	| MISSING_DAY
 percent_of_total(column_to_aggregate, aggregation,precision,level)
 ```
 
-### [Example 1](examples/public/percent_of_total_ex1.sql)
+### [Example 1](examples/public/percent_of_total/percent_of_total_ex1.sql)
 > ➡️ Input
 ```sh
 SELECT
@@ -194,7 +196,7 @@ GROUP BY 1
  The `sum_percent` column is the percentage of the total sum of the str_length column for each country. The `count_percent` column is the percentage of the total count of the company_name column for each country.
  ```
 
-### [Example 2](examples/public/percent_of_total_ex2.sql)
+### [Example 2](examples/public/percent_of_total/percent_of_total_ex2.sql)
 > ➡️ Input
 ```sh
 SELECT
@@ -227,6 +229,35 @@ GOG     	| US	    | 1	                | 0.25
  ```
  The percentages are calculated at the level of company_name and not the entire column. Hence the percentages of MSFT sum to 1 and GOG sum to 1.
  ```
+
+```sh
+describe(model_name)
+```
+
+### [Example 1](examples/public/describe/describe_ex1.sql)
+> ➡️ Input
+```sh
+{{describe('data_generator_enriched_describe')}}
+```
+
+> ⬅️ Output
+```sh
+
+meta_data_key   	    | meta_data_value	| identifier	| detail
+----------------------------------------------------------------------------
+nbr_of_rows    	        | 54800	            | dataset	    |
+nbr_of_columns    	    | 5	                | dataset	    |
+nbr_of_date_columns    	| 1	                | dataset	    |
+nbr_of_text_columns 	| 2                 | dataset	    |
+nbr_of_numeric_columns  | 1	                | dataset	    |
+nbr_of_boolean_columns	| 1	                | dataset	    |
+nbr_of_time_columns     | 0	                | dataset	    |
+```
+> 👓 Explanation
+ ```
+ This macro returns a table with the number of rows, columns, date columns, text columns, numeric columns, boolean columns and time columns in the input model. The output loosely and closely intends to replicate the behavior of pd.describe() in pandas.
+ ```
+
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.

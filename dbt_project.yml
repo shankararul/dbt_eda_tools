@@ -21,3 +21,18 @@ models:
   dbt_eda_tools:
     # Config indicated by + and applies to all files under models/example/
     +materialized: view
+
+vars:
+  variable_types :
+    # assembled by integrating the types from
+    # https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types and
+    # https://docs.snowflake.com/en/sql-reference/data-types.html
+    text: ('VARCHAR','CHAR', 'CHARACTER', 'STRING', 'TEXT')
+    boolean: ('BOOLEAN','BOOL')
+    date: ('DATE','DATETIME','TIMESTAMP','TIMESTAMP_LTZ','TIMESTAMP_NTZ','TIMESTAMP_TZ')
+    numeric: ('NUMBER','DECIMAL','NUMERIC','INT','INTEGER','BIGINT','SMALLINT','FLOAT','FLOAT4','FLOAT8','DOUBLE','DOUBLE PRECISION','REAL','INT64', 'TINYINT','BYETEINT', 'BIGDECIMAL','FLOAT64')
+    time: 'TIME'
+    to_implement_binary: ('BINARY', 'VARBINARY')
+    to_implement_semistructured: ('ARRAY', 'OBJECT', 'VARIANT')
+    to_implement_geospatial: ('GEOGRAPHY','GEOMETRY')
+    to_implement_vector: 'VECTOR'
