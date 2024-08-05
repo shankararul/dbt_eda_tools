@@ -5,3 +5,4 @@ logs/
 .venv/
 requirements.txt
 .vscode/
+docs/~$describe_output_structure.xlsx
