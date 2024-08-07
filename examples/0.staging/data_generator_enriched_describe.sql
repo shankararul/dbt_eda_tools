@@ -1,4 +1,4 @@
-{% set information_metadata = ((fetch_information_metadata(model_name)) | replace("'", "")| replace("[", " ")| replace("]", " ")  | trim).split(',') %}
+{% set information_metadata = ((fetch_information_metadata('data_generator')) | replace("'", "")| replace("[", " ")| replace("]", " ")  | trim).split(',') %}
 
 {% set db_name = information_metadata[2] | trim | replace(" ", "") %}
 
