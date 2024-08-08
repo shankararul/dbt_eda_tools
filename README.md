@@ -43,7 +43,7 @@
 
 | DB | Status |
 | ------ | ------ |
-| Snowflake | ✅ |
+| Snowflake (default) | ✅ |
 | Bigquery | ✅ |
 | Duckdb | 🔜 |
 
@@ -252,6 +252,11 @@ nbr_of_text_columns 	| 2                 | dataset	    |
 nbr_of_numeric_columns  | 1	                | dataset	    |
 nbr_of_boolean_columns	| 1	                | dataset	    |
 nbr_of_time_columns     | 0	                | dataset	    |
+is_short_string	        | BOOL	            | column	    |
+date_day	            | DATETIME	        | column	    |
+str_length	            | INT64	            | column	    |
+company_name	        | STRING	        | column	    |
+country	                | STRING	        | column	    |
 ```
 > 👓 Explanation
  ```
