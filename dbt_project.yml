@@ -31,8 +31,8 @@ vars:
     boolean: ('BOOLEAN','BOOL')
     date: ('DATE','DATETIME','TIMESTAMP','TIMESTAMP_LTZ','TIMESTAMP_NTZ','TIMESTAMP_TZ')
     numeric: ('NUMBER','DECIMAL','NUMERIC','INT','INTEGER','BIGINT','SMALLINT','FLOAT','FLOAT4','FLOAT8','DOUBLE','DOUBLE PRECISION','REAL','INT64', 'TINYINT','BYETEINT', 'BIGDECIMAL','FLOAT64')
-    time: 'TIME'
+    time: ('TIME')
     to_implement_binary: ('BINARY', 'VARBINARY')
     to_implement_semistructured: ('ARRAY', 'OBJECT', 'VARIANT')
     to_implement_geospatial: ('GEOGRAPHY','GEOMETRY')
-    to_implement_vector: 'VECTOR'
+    to_implement_vector: ('VECTOR')

@@ -13,13 +13,14 @@
         column_name
         , data_type
         , COUNT(*) OVER (){{':: STRING' if db_name == 'snowflake' else ''}} AS nbr_of_columns
+        , CASE
+            {% for key, value in variable_types_dict.items() %}
+            WHEN DATA_TYPE IN {{ value }} THEN '{{key}}'
+            {% endfor %}
+        END AS data_type_input
 
         {% for key, value in variable_types_dict.items() %}
-            {% if  key != 'time' %}
-                , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
-            {% elif key == 'time'%}  -- time is a special case, as it is not an array
-                , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE = '{{ value }}') OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
-            {% endif %}
+            , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
 
         {% endfor %}
 
