@@ -1,4 +1,4 @@
-{% macro fetch_meta_data(full_path,db_name,table_name) %}
+{% macro fetch_meta_data(output_name, full_path,db_name,table_name) %}
     {% set variable_types = var('variable_types') %}
     {% set variable_types_dict = {
         'text': variable_types['text']
@@ -7,7 +7,7 @@
         , 'boolean': variable_types['boolean']
         , 'time': variable_types['time']
     } %}
-    meta_data AS (
+    {{output_name}} AS (
         -- Need to explicitly cast the type before transposing the data
         SELECT
         column_name

@@ -48,3 +48,76 @@ macros:
       - name: model_name
         type: string
         description: The DBT model for which the information_schema needs to be fetched.
+
+  - name: fetch_column_metadata
+    description: "Fetch metadata about the columns in a given table, specifically the data type, count, top 10 unique count, and null count of each text column.
+
+    The macro first filters the metadata table to only include columns with a data type of 'text', then executes a SQL query to fetch the column metadata for those text columns. The results are then transformed into a JSON object containing the column name, count, unique count, and null count.
+
+    Output returned as CTE."
+
+    arguments:
+      - name: model_name
+        type: string
+        description: The DBT model that the column metadata is being fetched for.
+      - name: output_name
+        type: string
+        description: The name to use for the output CTE.
+      - name: full_path
+        type: string
+        description: The full path to the information_schema table being queried.
+      - name: db_name
+        type: string
+        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
+      - name: table_name
+        type: string
+        description: The name of the table being queried.
+
+  - name: fetch_meta_data
+    description: "Retrieves metadata about the columns in a given table. It returns a common table expression (CTE) named `meta_data` that contains the following information for each column in the table
+    >> `column_name`: The name of the column
+    >> `data_type`: The data type of the column
+    >> `nbr_of_columns`: The total number of columns in the table
+    >> `data_type_input`: The categorized data type of the column (e.g. 'text', 'date', 'numeric', 'boolean', 'time')
+    >>  `nbr_of_<data_type>_columns`: The number of columns of each categorized data type
+
+    Output returned as CTE"
+
+    arguments:
+      - name: output_name
+        type: string
+        description: The name to use for the output CTE.
+      - name: full_path
+        type: string
+        description: The full path to the information_schema table being queried.
+      - name: db_name
+        type: string
+        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
+      - name: table_name
+        type: string
+        description: The name of the table being queried.
+
+  - name: fetch_meta_data
+    description: "The macro uses conditional logic to generate the appropriate metadata based on the `key` parameter. It supports three different types of metadata:
+
+    >> `dataset`: This generates a set of metadata about the overall dataset, including the number of columns, text columns, date columns, numeric columns, boolean columns, and time columns.
+
+    >> `column`: This generates a set of metadata about each column in the table, including the column name and data type.
+
+    >> `rowcount`: This generates a single metadata item with the total number of rows in the table.
+
+    Output returned as CTE"
+
+    arguments:
+      - name: output_name
+        type: string
+        description: The name to use for the output CTE.
+      - name: key
+        type: string
+        description: The type of metadata to generate (one of 'dataset', 'column', or 'rowcount').
+      - name: table_name
+        type: string
+        description: The name of the table to generate metadata for.
+      - name: db_name
+        type: string
+        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
