@@ -79,13 +79,8 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ```
 
 > ⬅️ Output
-```sh
+<img align="center" src="./images/get_missing_date_ex1.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
-| DATE_DAY   | NEXT_DATE_DAY | MISSING_DAY |
---------------------------------------------
-| 2022-04-30 | 2022-05-06    | 6           |
-
-```
 > 👓 Explanation
  ```
  Finds all the missing dates For the `date_day` column in the `missing_day` model with the `expected_frequency` set to `DAY` across all dimensions without any filters
@@ -100,18 +95,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ```
 
 > ⬅️ Output
-```sh
-
-DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
-------------------------------------------------------------
-2022-04-01	| US	    | 2022-09-01	    | 5
-2022-04-01	| GB	    | 2022-09-01	    | 5
-2022-04-01	| FR	    | 2022-09-01	    | 5
-2022-04-01	| DE	    | 2022-09-01	    | 5
-2019-09-01	| DE	    | 2019-12-01	    | 3
-2022-04-01	| CA	    | 2022-09-01	    | 5
-
-```
+<img align="center" src="./images/get_missing_date_ex2.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 > 👓 Explanation
  ```
  Finds all the missing dates For the `date_month` column in the `missing_month` model with the `expected_frequency` set to `MONTH` for each of the countries without any filters.
@@ -139,14 +123,7 @@ DATE_MONTH	| COUNTRY	| NEXT_DATE_MONTH	| MISSING_MONTH
 ```
 
 > ⬅️ Output
-```sh
-
-DATE_DAY	| COUNTRY	| COMPANY_NAME	| NEXT_DATE_DAY	| MISSING_DAY
-2022-04-30	| US	    | MSFT	        | 2022-05-06	| 6
-2022-04-30	| DE	    | MSFT	        | 2022-05-06	| 6
-2019-09-06	| DE	    | MSFT	        | 2019-09-10	| 4
-
-```
+<img align="center" src="./images/get_missing_date_ex3.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 > 👓 Explanation
  ```
  Finds all the missing dates For the `daye_day` column in the `missing_day` model with the `expected_frequency` set to `DAY` for each of the countries and companies with the country as `DE` or `US` and the company name as `MSFT` and the string length greater than 2.
@@ -181,17 +158,8 @@ GROUP BY 1
 ```
 
 > ⬅️ Output
-```sh
+<img align="center" src="./images/percent_of_total_ex1.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
-| COUNTRY	| SUM_2_STR_LENGTH	| SUM_PERCENT	| COUNT_COMPANY_NAME	| COUNT_PERCENT	|
------------------------------------------------------------------------------------------
-| US	    | 24	            | 0.24	        | 5	                    | 0.238	        |
-| GB	    | 24	            | 0.24	        | 5	                    | 0.238	        |
-| FR	    | 10	            | 0.1	        | 2	                    | 0.095	        |
-| DE	    | 18	            | 0.18	        | 4	                    | 0.19	        |
-| CA	    | 24	            | 0.24	        | 5	                    | 0.238	        |
-
-```
 > 👓 Explanation
  ```
  The `sum_percent` column is the percentage of the total sum of the str_length column for each country. The `count_percent` column is the percentage of the total count of the company_name column for each country.
@@ -212,24 +180,14 @@ GROUP BY 1,2
 ```
 
 > ⬅️ Output
-```sh
+<img align="center" src="./images/percent_of_total_ex2.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
-COMPANY_NAME| COUNTRY	| COUNT_STR_LENGTH	| COUNT_PERCENT
-------------------------------------------------------------
-MSFT    	| CA	    | 1	                | 0.333
-MSFT    	| GB	    | 1	                | 0.333
-MSFT    	| US	    | 1	                | 0.333
-GOG        	| CA	    | 1	                | 0.25
-GOG     	| DE	    | 1	                | 0.25
-GOG        	| GB	    | 1	                | 0.25
-GOG     	| US	    | 1	                | 0.25
----     	| --	    | -	                | -----
----     	| --	    | -	                | -----
-```
 > 👓 Explanation
  ```
  The percentages are calculated at the level of company_name and not the entire column. Hence the percentages of MSFT sum to 1 and GOG sum to 1.
  ```
+
+### Describe
 
 ```sh
 describe(model_name)
