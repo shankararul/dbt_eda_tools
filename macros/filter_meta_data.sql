@@ -1,4 +1,4 @@
-{% macro filter_meta_data(key,table_name,output_name,db_name) %}
+{% macro filter_meta_data(output_name,key,table_name,db_name) %}
 
     {% if key == 'dataset' %}
 

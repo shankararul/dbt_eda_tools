@@ -1,4 +1,4 @@
-{% macro fetch_meta_data(full_path,db_name,table_name) %}
+{% macro fetch_meta_data(output_name, full_path,db_name,table_name) %}
     {% set variable_types = var('variable_types') %}
     {% set variable_types_dict = {
         'text': variable_types['text']
@@ -7,19 +7,20 @@
         , 'boolean': variable_types['boolean']
         , 'time': variable_types['time']
     } %}
-    meta_data AS (
+    {{output_name}} AS (
         -- Need to explicitly cast the type before transposing the data
         SELECT
         column_name
         , data_type
         , COUNT(*) OVER (){{':: STRING' if db_name == 'snowflake' else ''}} AS nbr_of_columns
+        , CASE
+            {% for key, value in variable_types_dict.items() %}
+            WHEN DATA_TYPE IN {{ value }} THEN '{{key}}'
+            {% endfor %}
+        END AS data_type_input
 
         {% for key, value in variable_types_dict.items() %}
-            {% if  key != 'time' %}
-                , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
-            {% elif key == 'time'%}  -- time is a special case, as it is not an array
-                , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE = '{{ value }}') OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
-            {% endif %}
+            , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
 
         {% endfor %}
 

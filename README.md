@@ -28,11 +28,12 @@
 > ✅ describe()
 `Returns metadata on the model, including the number of rows, the number of columns, and the number of columns by data type (numeric, text, date...).`
 
+> ✅ Categoric column exploration (Coming soon)
+`Get summary statistics such as Count, Unique values, Null values for categoric columns`
+
 > 🚧 Numeric column exploration (Coming soon)
 `Get summary statistics such as Min, Max, Median, Null values, Percentiles, Standard deviation, etc. for numeric columns`
 
-> 🚧 Categoric column exploration (Coming soon)
-`Get summary statistics such as Count, Unique values, Null values for categoric columns`
 
 > 🚧 Timeseries column exploration (Coming soon)
 `Get summary statistics such as Start date, End date, granularity of the timeseries (day,month,year), null values, missing dates for timeseries columns`
@@ -241,23 +242,8 @@ describe(model_name)
 ```
 
 > ⬅️ Output
-```sh
+<img align="center" src="./images/describe_ex1.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
-meta_data_key   	    | meta_data_value	| identifier	| detail
-----------------------------------------------------------------------------
-nbr_of_rows    	        | 54800	            | dataset	    |
-nbr_of_columns    	    | 5	                | dataset	    |
-nbr_of_date_columns    	| 1	                | dataset	    |
-nbr_of_text_columns 	| 2                 | dataset	    |
-nbr_of_numeric_columns  | 1	                | dataset	    |
-nbr_of_boolean_columns	| 1	                | dataset	    |
-nbr_of_time_columns     | 0	                | dataset	    |
-is_short_string	        | BOOL	            | column	    |
-date_day	            | DATETIME	        | column	    |
-str_length	            | INT64	            | column	    |
-company_name	        | STRING	        | column	    |
-country	                | STRING	        | column	    |
-```
 > 👓 Explanation
  ```
  This macro returns a table with the number of rows, columns, date columns, text columns, numeric columns, boolean columns and time columns in the input model. The output loosely and closely intends to replicate the behavior of pd.describe() in pandas.
