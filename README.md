@@ -106,7 +106,6 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 ### [Example 3](examples/public/get_missing_dates/get_missing_dates_ex3.sql)
 > ➡️ Input
 ```sh
-
 {{
     dbt_eda_tools.get_missing_date(
         'missing_day'
