@@ -133,6 +133,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 
 💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
 
+### Show as Percent of total
 
 ```sh
 percent_of_total(column_to_aggregate, aggregation,precision,level)
