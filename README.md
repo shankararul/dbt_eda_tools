@@ -83,7 +83,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 
 > 👓 Explanation
  ```
- Finds all the missing dates For the `date_day` column in the `missing_day` model with the `expected_frequency` set to `DAY` across all dimensions without any filters
+ Finds all the missing dates For the date_day column in the missing_day model with the expected_frequency set to DAY across all dimensions without any filters
 
  Returns 1 row with the missing dates
  ```
@@ -132,6 +132,7 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
  ```
 
 💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
+
 
 ### Show as Percent of total
 
