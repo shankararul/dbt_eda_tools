@@ -63,6 +63,9 @@ macros:
       - name: output_name
         type: string
         description: The name to use for the output CTE.
+      - name: data_type
+        type: string
+        description: Fetch metadata for columns filtered by provided data_type
       - name: full_path
         type: string
         description: The full path to the information_schema table being queried.
@@ -99,13 +102,9 @@ macros:
 
   - name: filter_meta_data
     description: "The macro uses conditional logic to generate the appropriate metadata based on the `key` parameter. It supports three different types of metadata:
-
     >> `dataset`: This generates a set of metadata about the overall dataset, including the number of columns, text columns, date columns, numeric columns, boolean columns, and time columns.
-
     >> `column`: This generates a set of metadata about each column in the table, including the column name and data type.
-
     >> `rowcount`: This generates a single metadata item with the total number of rows in the table.
-
     Output returned as CTE"
 
     arguments:

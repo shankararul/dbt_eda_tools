@@ -28,11 +28,11 @@
 > ✅ describe()
 `Returns metadata on the model, including the number of rows, the number of columns, and the number of columns by data type (numeric, text, date...).`
 
-> ✅ Categoric column exploration (Coming soon)
+> ✅ Categoric column exploration
 `Get summary statistics such as Count, Unique values, Null values for categoric columns`
 
-> 🚧 Numeric column exploration (Coming soon)
-`Get summary statistics such as Min, Max, Median, Null values, Percentiles, Standard deviation, etc. for numeric columns`
+> ✅ Numeric column exploration
+`Get summary statistics such as Min, Max, Median, Null values, Percentiles etc. for numeric columns`
 
 
 > 🚧 Timeseries column exploration (Coming soon)
