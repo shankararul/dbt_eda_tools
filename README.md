@@ -126,15 +126,13 @@ get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
 <img align="center" src="./images/get_missing_date_ex3.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 > 👓 Explanation
  ```
- Finds all the missing dates For the `daye_day` column in the `missing_day` model with the `expected_frequency` set to `DAY` for each of the countries and companies with the country as `DE` or `US` and the company name as `MSFT` and the string length greater than 2.
+ Finds all the missing dates For the `date_day` column in the `missing_day` model with the `expected_frequency` set to `DAY` for each of the countries and companies with the country as `DE` or `US` and the company name as `MSFT` and the string length greater than 2.
 
  Returns 3 rows with the missing dates
  ```
 
 💁 Note: You can send in numeric comparison operators as filters as well within quotes ['=3'](examples/public/get_missing_dates_ex4.sql) or '!=3'
 
-
-### Show as Percent of total
 
 ```sh
 percent_of_total(column_to_aggregate, aggregation,precision,level)
