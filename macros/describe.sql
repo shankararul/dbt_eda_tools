@@ -22,16 +22,22 @@
     , {{assemble_data(['dataset_info','rowcount_info','column_info'],['index_pos','meta_data_key','meta_data_value','identifier','detail'],'assembled_result', db_name)}}
     , {{fetch_column_metadata(ref(model_name),'column_detail_info_text', 'text', full_path, db_name, table_name)}}
     , {{fetch_column_metadata(ref(model_name),'column_detail_info_numeric', 'numeric', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(ref(model_name),'column_detail_info_date', 'date', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(ref(model_name),'column_detail_info_bool', 'boolean', full_path, db_name, table_name)}}
     SELECT
         assembed_result.meta_data_key
         , assembed_result.meta_data_value
         , assembed_result.identifier
-        , COALESCE(text_detail.detail, numeric_detail.detail) AS detail
+        , COALESCE(text_detail.detail, numeric_detail.detail,date_detail.detail, bool_detail.detail) AS detail
     FROM assembled_result AS assembed_result
     LEFT JOIN column_detail_info_text AS text_detail
     ON assembed_result.meta_data_key = text_detail.column_name
     LEFT JOIN column_detail_info_numeric AS numeric_detail
     ON assembed_result.meta_data_key = numeric_detail.column_name
+    LEFT JOIN column_detail_info_date AS date_detail
+    ON assembed_result.meta_data_key = date_detail.column_name
+    LEFT JOIN column_detail_info_bool AS bool_detail
+    ON assembed_result.meta_data_key = bool_detail.column_name
 
     ORDER BY index_pos ASC
 

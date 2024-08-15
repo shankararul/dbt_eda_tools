@@ -65,4 +65,40 @@ WHERE
                 )
             )
         )
+        OR (
+            LOWER(meta_data_value) = 'date'
+
+            AND (
+
+                detail IS NULL
+
+                OR (
+                    meta_data_key = 'DATE_DAY' AND (
+                    DETAIL:column_name::string <> 'DATE_DAY'
+                    OR DETAIL:count::integer <> 54800
+                    OR DETAIL:count_null::integer <> 0
+                    OR DETAIL:min::date <> DATE('2019-01-01')
+                    OR DETAIL:max::date <> DATE('2024-12-31')
+                    )
+                )
+            )
+        )
+        OR (
+            LOWER(meta_data_value) = 'boolean'
+
+            AND (
+
+                detail IS NULL
+
+                OR (
+                    meta_data_key = 'IS_SHORT_STRING' AND (
+                    DETAIL:column_name::string <> 'IS_SHORT_STRING'
+                    OR DETAIL:count::integer <> 54800
+                    OR DETAIL:count_null::integer <> 0
+                    OR DETAIL:value_counts_top10:false::float <> 43840
+                    OR DETAIL:value_counts_top10:true::float <> 10960
+                    )
+                )
+            )
+        )
     )
