@@ -7,15 +7,21 @@
         SELECT column_name FROM meta_data WHERE data_type_input = '{{data_type}}'
     {% endset %}
 
-    {% set model_ref = model_name %}
-
     {% set conditional_col_name = 'COLUMN_NAME' if db_name == 'snowflake' else 'column_name' %}
+    {% set conditional_estimated_granularity_name = 'ESTIMATED_GRANULARITY' if db_name == 'snowflake' else 'estimated_granularity' %}
+    {% set conditional_estimated_granularity_confidence_name = 'ESTIMATED_GRANULARITY_CONFIDENCE' if db_name == 'snowflake' else 'estimated_granularity_confidence' %}
 
     {# execute the SQL and fetch the results #}
     {% set results = dbt_utils.get_query_results_as_dict(meta_data_query) %}
     {% if results[conditional_col_name] %}
         {# construct the column detail results #}
         {% for col_name in results[conditional_col_name]%}
+
+            {% if data_type == 'date'%}
+                {% set results_granuality = dbt_utils.get_query_results_as_dict(estimated_granularity(model_name, col_name) ) %}
+            {% endif %}
+
+
             column_detail_{{col_name}} AS (
                 SELECT
                     1
@@ -36,10 +42,10 @@
                     {%  elif data_type in ('numeric','date') %}
                         , MIN({{col_name}}) AS min
                         , MAX({{col_name}}) AS max
-                        {# to implement in next version #}
-                        {# {%  if data_type == 'date' %}
-                            , {{datediff('LAG(' + col_name + ',1) OVER (ORDER BY ' + col_name + ')', "'"+ col_name + "'", 'DAY')}} AS gaps_in_days
-                        {% endif %} #}
+                        {%  if data_type == 'date' %}
+                            , MIN('{{results_granuality[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
+                            , MIN({{results_granuality[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
+                        {% endif %}
                     {% endif %}
 
 
@@ -47,7 +53,7 @@
                     , SUM(COUNT(DISTINCT {{col_name}})) OVER () AS cnt_unique
                     , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}({{col_name}} IS NULL) AS cnt_null
 
-                FROM {{model_ref}}
+                FROM {{ref(model_name)}}
 
                 GROUP BY ALL
 
@@ -80,11 +86,10 @@
                     {% elif data_type in ('numeric','date') %}
                         , 'min' , MIN(min)
                         , 'max' , MIN(max)
-                        {# to implement in next version #}
-                        {# {%  if data_type == 'date' %}
-                            , 'min_gap_in_days' , MIN(gaps_in_days)
-                            , 'max_gap_in_days' , MAX(gaps_in_days)
-                        {% endif %} #}
+                        {%  if data_type == 'date' %}
+                            , 'estimated_granularity' , MIN(estimated_granularity)
+                            , 'estimated_granularity_confidence' , MIN(estimated_granularity_confidence)
+                        {% endif %}
                     {% endif %}
                 ) AS detail
             FROM column_detail_{{col_name}}
@@ -96,7 +101,7 @@
         {{output_name}} AS (
             SELECT
                 '{{col_name}}' AS column_name
-                , NULL AS detail
+                , {{'' if db_name == 'snowflake' else 'TO_JSON'}}(NULL) AS detail
         )
     {% endif %}
 

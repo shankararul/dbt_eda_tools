@@ -7,7 +7,7 @@
 
     {% set full_path = information_metadata[0] | trim%}
     {% set table_name = information_metadata[1] | trim %}
-    {% set db_name = information_metadata[2] | trim | replace(" ", "") %}
+    {% set db_name = fetch_db() | trim %}
 
     WITH
     {# fetch meta data about the table from the information schema #}
@@ -20,10 +20,10 @@
     , {{filter_meta_data('column_info', 'column', 'meta_data', db_name)}}
     {# Union the above results #}
     , {{assemble_data(['dataset_info','rowcount_info','column_info'],['index_pos','meta_data_key','meta_data_value','identifier','detail'],'assembled_result', db_name)}}
-    , {{fetch_column_metadata(ref(model_name),'column_detail_info_text', 'text', full_path, db_name, table_name)}}
-    , {{fetch_column_metadata(ref(model_name),'column_detail_info_numeric', 'numeric', full_path, db_name, table_name)}}
-    , {{fetch_column_metadata(ref(model_name),'column_detail_info_date', 'date', full_path, db_name, table_name)}}
-    , {{fetch_column_metadata(ref(model_name),'column_detail_info_bool', 'boolean', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(model_name,'column_detail_info_text', 'text', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(model_name,'column_detail_info_numeric', 'numeric', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(model_name,'column_detail_info_date', 'date', full_path, db_name, table_name)}}
+    , {{fetch_column_metadata(model_name,'column_detail_info_bool', 'boolean', full_path, db_name, table_name)}}
     SELECT
         assembed_result.meta_data_key
         , assembed_result.meta_data_value

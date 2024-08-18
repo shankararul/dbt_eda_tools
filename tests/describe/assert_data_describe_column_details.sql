@@ -75,6 +75,8 @@ WHERE
                 OR (
                     meta_data_key = 'DATE_DAY' AND (
                     DETAIL:column_name::string <> 'DATE_DAY'
+                    OR DETAIL:estimated_granularity::string <> 'Daily'
+                    OR DETAIL:estimated_granularity_confidence::float <> 1
                     OR DETAIL:count::integer <> 54800
                     OR DETAIL:count_null::integer <> 0
                     OR DETAIL:min::date <> DATE('2019-01-01')
