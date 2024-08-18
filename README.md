@@ -35,8 +35,8 @@
 `Get summary statistics such as Min, Max, Median, Null values, Percentiles etc. for numeric columns`
 
 
-> 🚧 Timeseries column exploration (Coming soon)
-`Get summary statistics such as Start date, End date, granularity of the timeseries (day,month,year), null values, missing dates for timeseries columns`
+> ✅ Timeseries column exploration 
+`Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
 🚧 Fill Missing Dates (Coming soon)
 `Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
