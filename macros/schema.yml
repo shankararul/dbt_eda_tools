@@ -120,3 +120,6 @@ macros:
       - name: db_name
         type: string
         description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
+
+  - name: fetch_db
+    description: Determines the database adapter being used in the current context. It dispatches to different implementation macros based on the current adapter, returning a string representing the database type. The available implementations are Bigquery and Snowflake
