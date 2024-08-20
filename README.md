@@ -35,7 +35,7 @@
 `Get summary statistics such as Min, Max, Median, Null values, Percentiles etc. for numeric columns`
 
 
-> ✅ Timeseries column exploration 
+> ✅ Timeseries column exploration
 `Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
 🚧 Fill Missing Dates (Coming soon)
@@ -57,7 +57,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: shankararul/dbt_eda_tools
-    version: ">=0.6.0"
+    version: ">=1.0.0"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 

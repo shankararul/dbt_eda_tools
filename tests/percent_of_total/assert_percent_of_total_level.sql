@@ -1,10 +1,16 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 percent_of_total AS (
     SELECT
         company_name
         , country
-        , {{percent_of_total('str_length',precision=3)}} AS count_percent
-        , {{percent_of_total('str_length',precision=3, level=['company_name'])}} AS count_percent_level
+        , {{dbt_eda_tools.percent_of_total('str_length',precision=3)}} AS count_percent
+        , {{dbt_eda_tools.percent_of_total('str_length',precision=3, level=['company_name'])}} AS count_percent_level
 
     FROM {{ ref('data_aggregated') }}
     GROUP BY 1,2

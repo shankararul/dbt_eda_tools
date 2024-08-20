@@ -1,6 +1,12 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 describe_dataframe AS (
-    {{describe('data_generator_enriched_describe')}}
+    {{dbt_eda_tools.describe('data_generator_enriched_describe')}}
 )
 SELECT * FROM describe_dataframe
 WHERE

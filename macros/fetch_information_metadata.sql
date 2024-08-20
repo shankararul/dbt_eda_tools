@@ -1,6 +1,6 @@
 
 {% macro fetch_information_metadata(model_name) %}
-        {{ adapter.dispatch('fetch_information_metadata')(model_name) }}
+        {{ return(adapter.dispatch('fetch_information_metadata', 'dbt_eda_tools')(model_name)) }}
 {% endmacro %}
 
 {% macro bigquery__fetch_information_metadata(model_name) %}

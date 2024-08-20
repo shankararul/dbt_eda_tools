@@ -1,1 +1,7 @@
-{{describe('data_generator_enriched_describe')}}
+{{
+    config(
+        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+    )
+}}
+
+{{dbt_eda_tools.describe('data_generator_enriched_describe')}}

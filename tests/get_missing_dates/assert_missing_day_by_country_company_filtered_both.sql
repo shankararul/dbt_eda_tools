@@ -1,7 +1,13 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 missing_values AS (
     {{
-        get_missing_date(
+        dbt_eda_tools.get_missing_date(
             'missing_day'
             ,'date_day'
             , ['country','company_name']

@@ -1,10 +1,16 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 percent_of_total AS (
     SELECT
     country
     -- rounding defaults to 2 if unspecified
-    , {{percent_of_total('str_length','sum')}} AS sum_percent
-    , {{percent_of_total('str_length','sum',2)}} AS sum_percent_3
+    , {{dbt_eda_tools.percent_of_total('str_length','sum')}} AS sum_percent
+    , {{dbt_eda_tools.percent_of_total('str_length','sum',2)}} AS sum_percent_3
 
 FROM {{ ref('data_aggregated') }}
 GROUP BY 1

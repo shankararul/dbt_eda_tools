@@ -1,6 +1,12 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 missing_values AS (
-    {{get_missing_date('missing_year','date_year', [], {}, 'YEAR')}}
+    {{dbt_eda_tools.get_missing_date('missing_year','date_year', [], {}, 'YEAR')}}
 )
 , row_count_missing_values AS (
     SELECT COUNT(missing_year) AS row_count

@@ -1,9 +1,13 @@
 {% macro fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name) %}
+    {{ return(adapter.dispatch('fetch_column_metadata', 'dbt_eda_tools')(model_name, output_name, data_type, full_path, db_name, table_name)) }}
+{% endmacro %}
+
+{% macro default__fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name) %}
 
     {# filter the metadata table to only include columns with a data type of 'text'. #}
     {% set meta_data_query %}
         WITH
-        {{fetch_meta_data('meta_data', full_path, db_name, table_name)}}
+        {{dbt_eda_tools.fetch_meta_data('meta_data', full_path, db_name, table_name)}}
         SELECT column_name FROM meta_data WHERE data_type_input = '{{data_type}}'
     {% endset %}
 
@@ -18,7 +22,7 @@
         {% for col_name in results[conditional_col_name]%}
 
             {% if data_type == 'date'%}
-                {% set results_granuality = dbt_utils.get_query_results_as_dict(estimated_granularity(model_name, col_name) ) %}
+                {% set results_granularity = dbt_utils.get_query_results_as_dict(dbt_eda_tools.estimated_granularity(model_name, col_name) ) %}
             {% endif %}
 
 
@@ -43,8 +47,8 @@
                         , MIN({{col_name}}) AS min
                         , MAX({{col_name}}) AS max
                         {%  if data_type == 'date' %}
-                            , MIN('{{results_granuality[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
-                            , MIN({{results_granuality[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
+                            , MIN('{{results_granularity[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
+                            , MIN({{results_granularity[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
                         {% endif %}
                     {% endif %}
 
@@ -77,7 +81,12 @@
                         {% if data_type == 'text' %}
                             , 'unique' , MIN(cnt_unique)
                         {% endif %}
-                        , 'value_counts_top10',{{'OBJECT_AGG(' if db_name == 'snowflake' else 'ARRAY_AGG('}}{{'' if db_name == 'snowflake' else 'JSON_OBJECT('}}{{col_name}}, cnt){{'' if db_name == 'snowflake' else ')'}}
+                        , 'value_counts_top10',
+                            {{'OBJECT_AGG' if db_name == 'snowflake' else 'ARRAY_AGG'}}
+                                ({{'' if db_name == 'snowflake' else 'JSON_OBJECT('}}
+                                    {{ (col_name+ ':: STRING') if db_name == 'snowflake' else 'CAST('+col_name+' AS STRING)' }}
+                                , cnt)
+                                {{'' if db_name == 'snowflake' else ')'}}
                     {% elif data_type == 'numeric' %}
                         , 'mean' , MIN(avg)
                         , 'percentile_25' , MIN(percentile_25)
