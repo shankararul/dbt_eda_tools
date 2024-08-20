@@ -1,26 +1,31 @@
 {% macro percent_of_total(column_to_aggregate, aggregation='COUNT',precision=2,level=none) %}
+    {{ return(adapter.dispatch('percent_of_total', 'dbt_eda_tools')(column_to_aggregate, aggregation,precision,level)) }}
+{% endmacro %}
 
-{% set db_name = fetch_db() | trim %}
+{% macro default__percent_of_total(column_to_aggregate, aggregation,precision,level) %}
 
-{% if level %}
-  {% set level_agg = "PARTITION BY " ~ level|join(',') %}
-{% endif %}
+  {% set db_name = dbt_eda_tools.fetch_db() | trim %}
 
-    ROUND(
-      {% if aggregation|lower in ['sum','count'] %}
-        {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
-          {{aggregation}}({{column_to_aggregate}})
-          ,
-          SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}})
-        )
-      {% elif aggregation|lower == 'countdistinct' %}
+  {% if level %}
+    {% set level_agg = "PARTITION BY " ~ level|join(',') %}
+  {% endif %}
+
+      ROUND(
+        {% if aggregation|lower in ['sum','count'] %}
           {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
-            COUNT(DISTINCT {{column_to_aggregate}})
+            {{aggregation}}({{column_to_aggregate}})
             ,
-            SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}})
+            SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}})
           )
-      {% else %}
-        NULL
-      {% endif %}
-    , {{precision}})
+        {% elif aggregation|lower == 'countdistinct' %}
+            {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
+              COUNT(DISTINCT {{column_to_aggregate}})
+              ,
+              SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}})
+            )
+        {% else %}
+          NULL
+        {% endif %}
+      , {{precision}})
+
 {% endmacro %}

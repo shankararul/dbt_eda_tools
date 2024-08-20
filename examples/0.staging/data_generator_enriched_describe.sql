@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+    )
+}}
+
 {% set db_name = fetch_db() | trim  %}
 
 SELECT

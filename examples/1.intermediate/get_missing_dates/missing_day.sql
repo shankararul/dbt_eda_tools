@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+    )
+}}
+
 {# Create some fake missing dates at the granularity of the day #}
 WITH
 missing_day AS (

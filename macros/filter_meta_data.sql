@@ -1,4 +1,8 @@
 {% macro filter_meta_data(output_name,key,table_name,db_name) %}
+    {{ return(adapter.dispatch('filter_meta_data', 'dbt_eda_tools')(output_name,key,table_name,db_name)) }}
+{% endmacro %}
+
+{% macro default__filter_meta_data(output_name,key,table_name,db_name) %}
 
     {% if key == 'dataset' %}
 

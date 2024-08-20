@@ -10,7 +10,13 @@
  */
 
 {{
-    get_missing_date(
+    config(
+        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+    )
+}}
+
+{{
+    dbt_eda_tools.get_missing_date(
         'missing_day'
         ,'date_day'
         , ['country','company_name']

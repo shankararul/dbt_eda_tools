@@ -1,6 +1,12 @@
+{{
+    config(
+        enabled = var('dbt_eda_tools_developer',false)
+    )
+}}
+
 WITH
 describe_dataframe AS (
-    {{describe('data_aggregated_mixed_granularity')}}
+    {{dbt_eda_tools.describe('data_aggregated_mixed_granularity')}}
 )
 SELECT * FROM describe_dataframe
 WHERE

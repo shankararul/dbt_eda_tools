@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+    )
+}}
+
 WITH date_gen AS (
     {{ dbt_utils.date_spine(
         datepart="day",
