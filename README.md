@@ -69,7 +69,7 @@ packages:
 ### Get Missing Dates
 
 ```sh
-get_missing_date(model_name, date_col, dimensions, filters, expected_frequency)
+get_missing_date('model_name', date_col, dimensions, filters, expected_frequency)
 ```
 
 ### [Example 1](examples/public/get_missing_dates/get_missing_dates_ex1.sql)
@@ -191,13 +191,13 @@ GROUP BY 1,2
 ### Describe
 
 ```sh
-describe(model_name)
+describe('model_name')
 ```
 
 ### [Example 1](examples/public/describe/describe_ex1.sql)
 > ➡️ Input
 ```sh
-{{describe('data_generator_enriched_describe')}}
+{{dbt_eda_tools.describe('data_generator_enriched_describe')}}
 ```
 
 > ⬅️ Output
