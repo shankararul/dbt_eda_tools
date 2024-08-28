@@ -1,6 +1,6 @@
 
 name: 'dbt_eda_tools'
-version: '0.1.0'
+version: '1.0.1'
 
 profile: 'dbt_eda_tools'
 
@@ -15,7 +15,7 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-require-dbt-version: [">=1.6.0", "<2.0.0"]
+require-dbt-version: [">=1.0.0", "<2.0.0"]
 
 models:
   dbt_eda_tools:
