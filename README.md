@@ -211,3 +211,9 @@ describe('model_name')
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.
+
+# 👨🏽‍💻 Development
+To run tests & materialize results, you need to set the following environment variables:
+```sh
+DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER=1
+```
