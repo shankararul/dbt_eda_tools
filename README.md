@@ -50,14 +50,12 @@
 
 # 💾 Install
 
-`dbt_eda_tools` currently supports `dbt 1.6.x` or higher.
-
 Include in `packages.yml`
 
 ```yaml
 packages:
   - package: shankararul/dbt_eda_tools
-    version: ">=1.0.0"
+    version: ">=1.0.1"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
