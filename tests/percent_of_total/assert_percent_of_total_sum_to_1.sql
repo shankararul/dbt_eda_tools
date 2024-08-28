@@ -1,6 +1,6 @@
 {{
     config(
-        enabled = var('dbt_eda_tools_developer',false)
+        enabled =  env_var('DBT_EDA_TOOLS_DEVELOPER',0)| int == 1
     )
 }}
 

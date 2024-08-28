@@ -20,10 +20,7 @@ require-dbt-version: [">=1.6.0", "<2.0.0"]
 models:
   dbt_eda_tools:
     # Config indicated by + and applies to all files under models/example/
-    +materialized: ephemeral
+    +materialized: view
 
 tests:
   +enabled: true
-
-vars:
-  dbt_eda_tools_developer: true

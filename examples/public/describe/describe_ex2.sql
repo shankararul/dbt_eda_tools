@@ -1,6 +1,6 @@
 {{
     config(
-        materialized = 'view' if var('dbt_eda_tools_developer',false) else 'ephemeral'
+        materialized = 'view' if env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1 else 'ephemeral'
     )
 }}
 
