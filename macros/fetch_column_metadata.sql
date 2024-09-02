@@ -32,24 +32,24 @@
                     {% if data_type in ('text','boolean') %}
                         , {{col_name}}
                         , COUNT(*) AS cnt
-                    {%  elif data_type == 'numeric' %}
-                        , AVG({{col_name}}) AS avg
-                        {% if db_name == 'snowflake'%}
-                        , APPROX_PERCENTILE({{col_name}}, 0.25) AS percentile_25
-                        , APPROX_PERCENTILE({{col_name}}, 0.5) AS percentile_50
-                        , APPROX_PERCENTILE({{col_name}}, 0.75) AS percentile_75
-                        {% elif db_name == 'bigquery' %}
-                        , APPROX_QUANTILES(str_length, 100)[OFFSET(25)] AS percentile_25
-                        , APPROX_QUANTILES(str_length, 100)[OFFSET(50)] AS percentile_50
-                        , APPROX_QUANTILES(str_length, 100)[OFFSET(75)] AS percentile_75
-                        {% endif %}
                     {%  elif data_type in ('numeric','date') %}
-                        , MIN({{col_name}}) AS min
-                        , MAX({{col_name}}) AS max
-                        {%  if data_type == 'date' %}
-                            , MIN('{{results_granularity[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
-                            , MIN({{results_granularity[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
-                        {% endif %}
+                            , MIN({{col_name}}) AS min
+                            , MAX({{col_name}}) AS max
+                            {%  if data_type == 'numeric' %}
+                                , ROUND(AVG({{col_name}}),4) AS avg
+                                {% if db_name == 'snowflake'%}
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.25),'999.999999'),4) AS percentile_25
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.5),'999.999999'),4) AS percentile_50
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.75),'999.999999'),4) AS percentile_75
+                                {% elif db_name == 'bigquery' %}
+                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(25)],4) AS percentile_25
+                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(50)],4) AS percentile_50
+                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(75)],4) AS percentile_75
+                                {% endif %}
+                            {%  elif data_type == 'date' %}
+                                , MIN('{{results_granularity[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
+                                , MIN({{results_granularity[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
+                            {% endif %}
                     {% endif %}
 
 
@@ -71,6 +71,7 @@
         {# turn the results into a json object #}
         , {{output_name}} AS (
             {% for col_name in results[conditional_col_name] %}
+            {% set non_null_json_key = "COALESCE("+col_name+",'NULL')" %}
             SELECT
                 '{{col_name}}' AS column_name
                 , {{'OBJECT_CONSTRUCT' if db_name == 'snowflake' else 'JSON_OBJECT'}}(
@@ -84,18 +85,18 @@
                         , 'value_counts_top10',
                             {{'OBJECT_AGG' if db_name == 'snowflake' else 'ARRAY_AGG'}}
                                 ({{'' if db_name == 'snowflake' else 'JSON_OBJECT('}}
-                                    {{ (col_name+ ':: STRING') if db_name == 'snowflake' else 'CAST('+col_name+' AS STRING)' }}
+                                    {{ (non_null_json_key+ ':: STRING') if db_name == 'snowflake' else 'CAST('+non_null_json_key+' AS STRING)' }}
                                 , cnt)
                                 {{'' if db_name == 'snowflake' else ')'}}
-                    {% elif data_type == 'numeric' %}
-                        , 'mean' , MIN(avg)
-                        , 'percentile_25' , MIN(percentile_25)
-                        , 'percentile_50' , MIN(percentile_50)
-                        , 'percentile_75' , MIN(percentile_75)
                     {% elif data_type in ('numeric','date') %}
                         , 'min' , MIN(min)
                         , 'max' , MIN(max)
-                        {%  if data_type == 'date' %}
+                        {%  if data_type == 'numeric' %}
+                            , 'mean' , MIN(avg)
+                            , 'percentile_25' , MIN(percentile_25)
+                            , 'percentile_50' , MIN(percentile_50)
+                            , 'percentile_75' , MIN(percentile_75)
+                        {%  elif data_type == 'date' %}
                             , 'estimated_granularity' , MIN(estimated_granularity)
                             , 'estimated_granularity_confidence' , MIN(estimated_granularity_confidence)
                         {% endif %}
