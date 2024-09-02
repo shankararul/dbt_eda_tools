@@ -135,7 +135,7 @@ get_missing_date('model_name', date_col, dimensions, filters, expected_frequency
 ### Show as Percent of total
 
 ```sh
-percent_of_total(column_to_aggregate, aggregation,precision,level)
+percent_of_total(column_to_aggregate, aggregation=None,precision=None,level=None)
 ```
 
 ### [Example 1](examples/public/percent_of_total/percent_of_total_ex1.sql)
@@ -189,7 +189,9 @@ GROUP BY 1,2
 ### Describe
 
 ```sh
-describe('model_name')
+describe('model_name', include=None)
+
+ Include can take an array ['text','boolean','numeric','date'] or a single string 'all'. If none is provided, returns meta data on the entire dataset.
 ```
 
 ### [Example 1](examples/public/describe/describe_ex1.sql)
@@ -206,6 +208,31 @@ describe('model_name')
  This macro returns a table with the number of rows, columns, date columns, text columns, numeric columns, boolean columns and time columns in the input model. The output loosely and closely intends to replicate the behavior of pd.describe() in pandas.
  ```
 
+### [Example 2](examples/public/describe/describe_ex4.sql)
+> ➡️ Input
+```sh
+{{dbt_eda_tools.describe('data_generator_enriched_describe', include='all')}}
+```
+
+> ⬅️ Output
+<img align="center" src="./images/describe_ex4.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+
+> 👓 Explanation
+ ```
+ Filters only for column meta data and unpivots the JSON dict to be more readable.
+ Keys include: 'count','count_null',PERCENT_NULL,'column_name','estimated_granularity','estimated_granularity_confidence','max','mean','min','percentile_25','percentile_50','percentile_75','unique','value_counts_top10'
+ ```
+
+ ### [Example 3](examples/public/describe/describe_ex5.sql)
+> ➡️ Input
+```sh
+{{dbt_eda_tools.describe('data_generator_enriched_describe', include=['text','boolean','numeric'])}}
+```
+
+> 👓 Explanation
+ ```
+ Filters the column metadata for the types provided. In this case, text, boolean and numeric columns are returned.
+ ```
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.
