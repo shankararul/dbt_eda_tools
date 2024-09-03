@@ -1,4 +1,6 @@
-<img align="center" src="./images/dbt_eda_tools_black.png" alt="dbt_eda_tools_logo" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+<p align="center">
+  <img src="./images/dbt_eda_tools_black.png" />
+</p>
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
@@ -55,7 +57,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: shankararul/dbt_eda_tools
-    version: ">=1.1.0"
+    version: ">=1.1.1"
 ```
 [Read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
