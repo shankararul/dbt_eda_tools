@@ -40,6 +40,9 @@
 > ✅ Timeseries column exploration
 `Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
+🚧 Debug Preview during dbt build/run (Coming soon)
+`Prints the row count for both tables & views / preview of the model in the terminal during dbt build/run`
+
 🚧 Fill Missing Dates (Coming soon)
 `Fills the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
