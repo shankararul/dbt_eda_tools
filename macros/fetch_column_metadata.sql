@@ -62,6 +62,7 @@
                 GROUP BY ALL
 
                 {% if data_type == 'text' %}
+                    ORDER by cnt_null DESC, cnt DESC
                     LIMIT 10
                 {% endif %}
 
@@ -71,13 +72,13 @@
         {# turn the results into a json object #}
         , {{output_name}} AS (
             {% for col_name in results[conditional_col_name] %}
-            {% set non_null_json_key = "COALESCE("+col_name+","+('NULL' if data_type != 'boolean' else 'false')+")" %}
+            {% set non_null_json_key = "COALESCE("+col_name+","+('"NULL"' if data_type != 'boolean' else 'false')+")" %}
             SELECT
                 '{{col_name}}' AS column_name
                 , {{'OBJECT_CONSTRUCT' if db_name == 'snowflake' else 'JSON_OBJECT'}}(
                     'column_name', '{{col_name}}'
                     , 'count' , MIN(cnt_total)
-                    , 'count_null' , MIN(cnt_null)
+                    , 'count_null' , MAX(cnt_null) -- needs to be max not min otherwise always zero
                     {% if data_type in ('text', 'boolean') %}
                         {% if data_type == 'text' %}
                             , 'unique' , MIN(cnt_unique)
