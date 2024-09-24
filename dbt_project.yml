@@ -18,9 +18,15 @@ clean-targets:
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 
 models:
+  +post-hook:
+      - "{{ dbt_eda_tools.get_row_count() }}"
+      - "{{ dbt_eda_tools.get_preview(20) }}"
   dbt_eda_tools:
     # Config indicated by + and applies to all files under models/example/
     +materialized: view
 
 data_tests:
   +enabled: true
+
+vars:
+  dbt_eda_tools_log_enable: "Y"

@@ -40,8 +40,13 @@
 > ✅ Timeseries column exploration
 `Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
-🚧 Debug Preview during dbt build/run (Coming soon)
-`Prints the row count for both tables & views / preview of the model in the terminal during dbt build/run`
+✅ Debug Preview during dbt build/run
+
+> ✅ Get row count
+`Logs the row count for both tables & views in the termialn after dbt build/run`
+
+> ✅ Get Head of the table
+`Preview of the model in the terminal during dbt build/run`
 
 
 | DB | Status |
@@ -235,6 +240,69 @@ describe('model_name', include=None)
  ```
  Filters the column metadata for the types provided. In this case, text, boolean and numeric columns are returned.
  ```
+
+### Debug/Preview in the terminal
+
+```sh
+dbt_project.yml
+----------------
+...
+...
+vars:
+  dbt_eda_tools_log_enable: "Y"
+
+```
+
+Add the dbt_eda_tools_log_enable variable to your dbt_project.yml and set it to "Y". This will enable logging of the row count and preview for each model.
+
+## Get Row count
+
+```sh
+dbt_project.yml
+----------------
+...
+...
+models:
+  +post-hook:
+      - "{{ dbt_eda_tools.get_row_count() }}"
+```
+
+> 👓 Explanation
+ ```
+ Returns the number of rows in the model. This is useful for debugging and previewing the output of a model in the terminal.
+
+ 💡 Tip: You can add this to the post-hook of any model to get the number of rows in the model after it is run. This is useful for debugging and previewing the output of a model in the terminal.
+
+ ```
+
+> ⬅️ Output
+<img align="center" src="./images/get_row_count.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+
+
+
+## Get Head / Preview of the model
+
+```sh
+dbt_project.yml
+----------------
+...
+...
+models:
+  +post-hook:
+      - "{{ dbt_eda_tools.get_preview(10) }}"
+```
+
+> 👓 Explanation
+ ```
+ Returns the top N number of rows in the model. Defaults to 5 if not specified. This is useful for debugging and previewing the model in the terminal.
+
+ 💡 Tip: You can add this to the post-hook of any model to get the preview ofthe model after it is run. This is useful for debugging and previewing the output of a model in the terminal.
+
+ ```
+
+> ⬅️ Output
+<img align="center" src="./images/get_preview.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.
