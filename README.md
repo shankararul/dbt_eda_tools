@@ -19,33 +19,32 @@
 # dbt_eda_tools
 ## A medley of macros that could be handy for your Exploratory Data Analysis in DBT.
 
-✅ Get Missing Dates
+✅ **Get Missing Dates**
 `Finds all the missing dates in a model for the specified dimensions and filters according to the time granularity expected`
 
-✅ Show as Percentage
+✅ **Show as Percentage**
 `Shows the value as percentage of the total value for the specified aggregations`
 
-✅ Exploratory data analysis
+✅ **Exploratory data analysis**
 
-> ✅ describe()
+> ✅ **describe()**
 `Returns metadata on the model, including the number of rows, the number of columns, and the number of columns by data type (numeric, text, date...).`
 
-> ✅ Categoric column exploration
+> ✅ **Categoric column exploration**
 `Get summary statistics such as Count, Unique values, Null values for categoric columns`
 
-> ✅ Numeric column exploration
+> ✅ **Numeric column exploration**
 `Get summary statistics such as Min, Max, Median, Null values, Percentiles etc. for numeric columns`
 
-
-> ✅ Timeseries column exploration
+> ✅ **Timeseries column exploration**
 `Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
-✅ Debug Preview during dbt build/run
+✅ **Debug Preview during dbt build/run**
 
-> ✅ Get row count
+> ✅ **Get row count**
 `Logs the row count for both tables & views in the termialn after dbt build/run`
 
-> ✅ Get Head of the table
+> ✅ **Get preview of the model**
 `Preview of the model in the terminal during dbt build/run`
 
 
@@ -241,7 +240,7 @@ describe('model_name', include=None)
  Filters the column metadata for the types provided. In this case, text, boolean and numeric columns are returned.
  ```
 
-### Debug/Preview in the terminal
+## Debug/Preview in the terminal
 
 ```sh
 dbt_project.yml
@@ -253,9 +252,11 @@ vars:
 
 ```
 
+```
 Add the dbt_eda_tools_log_enable variable to your dbt_project.yml and set it to "Y". This will enable logging of the row count and preview for each model.
+```
 
-## Get Row count
+### Get Row count
 
 ```sh
 dbt_project.yml
@@ -280,7 +281,7 @@ models:
 
 
 
-## Get Head / Preview of the model
+### Get Head / Preview of the model
 
 ```sh
 dbt_project.yml
