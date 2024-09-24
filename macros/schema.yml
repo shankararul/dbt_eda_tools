@@ -123,3 +123,24 @@ macros:
 
   - name: fetch_db
     description: Determines the database adapter being used in the current context. It dispatches to different implementation macros based on the current adapter, returning a string representing the database type. The available implementations are Bigquery and Snowflake
+
+
+  - name: get_preview
+    description: Returns the first few rows of a table
+    arguments:
+      - name: num_rows
+        type: integer
+        description: The number of rows to return. Defaults to 5.
+
+  - name: get_row_count
+    description: Returns the number of rows in a table
+
+  - name: print_pretty_table
+    description: Logs the table in a pretty format
+    arguments:
+      - name: headers
+        type: string
+        description: The headers of the table in list format. Ex ['Col1','Col2','Col3']
+      - name: rows
+        type: string
+        description: The rows of the table in list format. Ex [['R1C1','R1C2','R1C3'],['R2C1','R2C2','R2C3']]

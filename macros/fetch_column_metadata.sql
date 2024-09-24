@@ -72,7 +72,7 @@
         {# turn the results into a json object #}
         , {{output_name}} AS (
             {% for col_name in results[conditional_col_name] %}
-            {% set non_null_json_key = "COALESCE("+col_name+","+('"NULL"' if data_type != 'boolean' else 'false')+")" %}
+            {% set non_null_json_key = "COALESCE("+col_name+","+("'NULL'" if data_type != 'boolean' else 'false')+")" %}
             SELECT
                 '{{col_name}}' AS column_name
                 , {{'OBJECT_CONSTRUCT' if db_name == 'snowflake' else 'JSON_OBJECT'}}(
