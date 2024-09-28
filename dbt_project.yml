@@ -2,7 +2,7 @@
 name: 'dbt_eda_tools'
 version: '1.1.2'
 
-profile: 'dbt_eda_tools'
+profile: 'dbt_eda_tools_duck'
 
 model-paths: ["examples"]
 analysis-paths: ["analyses"]

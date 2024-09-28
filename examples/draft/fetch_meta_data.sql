@@ -1,12 +1,4 @@
-{% macro fetch_meta_data(output_name, full_path,db_name,table_name) %}
-    {{ return(adapter.dispatch('fetch_meta_data', 'dbt_eda_tools')(output_name, full_path,db_name,table_name)) }}
-{% endmacro %}
-
-{% macro default__fetch_meta_data(output_name, full_path,db_name,table_name) %}
-    {# assembled by integrating the types from
-    https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types and
-    https://docs.snowflake.com/en/sql-reference/data-types.html #}
-    {% set variable_types_dict = {
+{% set variable_types_dict = {
         'text': ('VARCHAR','CHAR', 'CHARACTER', 'STRING', 'TEXT')
         , 'date': ('DATE','DATETIME','TIMESTAMP','TIMESTAMP_LTZ','TIMESTAMP_NTZ','TIMESTAMP_TZ')
         , 'numeric': ('NUMBER','DECIMAL','NUMERIC','INT','INTEGER','BIGINT','SMALLINT','FLOAT','FLOAT4','FLOAT8','DOUBLE','DOUBLE PRECISION','REAL','INT64', 'TINYINT','BYETEINT', 'BIGDECIMAL','FLOAT64')
@@ -17,8 +9,7 @@
         , 'to_implement_geospatial': ('GEOGRAPHY','GEOMETRY')
         , 'to_implement_vector': ('VECTOR','NEEDSTOBEARRAY')
     } %}
-    {{output_name}} AS (
-        -- Need to explicitly cast the type before transposing the data
+
         SELECT
         column_name
         , data_type
@@ -41,10 +32,7 @@
             {% endif %}
         {% endfor %}
 
-        FROM {{full_path}}.TABLES t
-        INNER JOIN {{full_path}}.COLUMNS c ON
+        FROM INFORMATION_SCHEMA.TABLES t
+        INNER JOIN INFORMATION_SCHEMA.COLUMNS c ON
                 c.table_schema = t.table_schema AND c.table_name = t.table_name
-                WHERE t.table_name = '{{table_name}}'
-    )
-
-{% endmacro %}
+                WHERE t.table_name = 'data_generator'
