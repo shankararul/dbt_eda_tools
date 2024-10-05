@@ -10,7 +10,7 @@
             SELECT
                     DISTINCT
                     '{{key}}' AS identifier
-                    , NULL AS detail
+                    , '' AS detail
                     , nbr_of_columns
                     , nbr_of_text_columns
                     , nbr_of_date_columns
@@ -32,7 +32,7 @@
                     , meta_data_key
                     , identifier
                     , detail
-                    , {{'meta_data_value:: STRING' if db_name=='snowflake' else 'CAST(meta_data_value AS STRING)'}} AS meta_data_value
+                    , CAST(meta_data_value AS STRING) AS meta_data_value
                 FROM meta_data_unique
                 UNPIVOT (meta_data_value FOR meta_data_key IN (nbr_of_columns, nbr_of_text_columns, nbr_of_date_columns, nbr_of_numeric_columns,nbr_of_boolean_columns,nbr_of_time_columns))
         )
@@ -43,8 +43,8 @@
                 20 + ROW_NUMBER() OVER (ORDER BY data_type) AS index_pos
                 , column_name AS meta_data_key
                 , '{{key}}' AS identifier
-                , NULL AS detail
-                , {{'data_type:: STRING' if db_name=='snowflake' else 'CAST(data_type AS STRING)'}} AS meta_data_value
+                , '' AS detail
+                , CAST(data_type AS STRING) AS meta_data_value
             FROM {{table_name}}
         )
     {% elif key =='rowcount'%}
@@ -53,8 +53,8 @@
                     0 AS index_pos
                     , {{'UPPER' if db_name=='snowflake' else ''}}('nbr_of_rows') AS meta_data_key
                     , 'dataset' AS identifier
-                    , NULL AS detail
-                    , {{'COUNT(*):: STRING' if db_name=='snowflake' else 'CAST(COUNT(*) AS STRING)'}} AS meta_data_value
+                    , '' AS detail
+                    , CAST(COUNT(*) AS STRING) AS meta_data_value
             FROM {{ table_name }}
             GROUP BY ALL
         )

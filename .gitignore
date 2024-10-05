@@ -1,8 +1,9 @@
 
 target/
+ouput/
 dbt_packages/
 logs/
 .venv/
+venv/
 requirements.txt
 .vscode/
-docs/~$describe_output_structure.xlsx

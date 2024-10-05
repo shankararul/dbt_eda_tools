@@ -22,7 +22,7 @@
         SELECT
         column_name
         , data_type
-        , COUNT(*) OVER (){{':: STRING' if db_name == 'snowflake' else ''}} AS nbr_of_columns
+        , COUNT(*) OVER (){{':: STRING' if db_name in ('snowflake','duckdb') else ''}} AS nbr_of_columns
         , CASE
                 {% for key, value in variable_types_dict.items() %}
                     {% if not key.startswith('to_implement_') %}
@@ -33,7 +33,11 @@
 
         {% for key, value in variable_types_dict.items() %}
             {% if not key.startswith('to_implement_') %}
-                , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
+                {% if db_name in ('snowflake','bigquery') %}
+                    , {{'COUNT_IF' if db_name == 'snowflake' else 'COUNTIF'}}(DATA_TYPE IN {{ value }}) OVER () {{':: STRING' if db_name=='snowflake' else ''}}  AS nbr_of_{{key}}_columns
+                {% elif db_name == 'duckdb' %}
+                    , COUNT(CASE WHEN DATA_TYPE IN {{ value }} THEN 1 END) OVER ():: STRING AS nbr_of_{{key}}_columns
+                {% endif %}
             {% endif %}
         {% endfor %}
 

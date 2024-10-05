@@ -15,6 +15,12 @@
 
 {% endmacro %}
 
+{% macro duckdb__fetch_db() %}
+
+        {%- do return ('duckdb') -%}
+
+{% endmacro %}
+
 {% macro default__fetch_db()%}
 
         {%- do return ('rest') -%}

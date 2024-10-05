@@ -1,9 +1,3 @@
-{{
-    config(
-        enabled = env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1
-    )
-}}
-
 WITH
 describe_dataframe AS (
     {{dbt_eda_tools.describe('data_generator_enriched_describe', include=['text','boolean','numeric'])}}
@@ -15,6 +9,6 @@ WHERE
     AND
     (
         (
-        column_name NOT IN ('IS_SHORT_STRING', 'STR_LENGTH', 'COMPANY_NAME', 'COUNTRY')
+        column_name NOT IN ('is_short_string', 'str_length', 'company_name', 'country')
         )
     )
