@@ -4,7 +4,7 @@
 
 {% macro default__summarize_dataset(db_name, dtype_loop) %}
 
-{% set json_keys = ('count','count_null','mean','percentile_25','percentile_50','percentile_75','unique','value_counts_top10', 'estimated_granularity','estimated_granularity_confidence','min','max') %}
+{% set json_keys = ('count','count_null','mean','percentile_25','percentile_50','percentile_75','unique_values','value_counts_top10', 'estimated_granularity','estimated_granularity_confidence','min','max') %}
 
 
 {% if dtype_loop %}
@@ -20,7 +20,7 @@
                 {% endif %}
             {% endfor %}
         )
-        {% if db_name =='bigquery'%}
+        {% if db_name in ('bigquery','duckdb') %}
             , flatten_data AS (
                 SELECT
                     column_name
@@ -36,12 +36,12 @@
                     column_name
                     , dtype
                     , key AS pivot_key
-                    , {{'value' if db_name == 'snowflake' else 'TO_JSON_STRING(value)'}} AS pivot_value
+                    , {{ 'value' if db_name == 'snowflake' else 'TO_JSON_STRING(value)' if db_name == 'bigquery' else 'JSON(value)' }} AS pivot_value ,
                 FROM
             {% if db_name =='snowflake' %}
                 unioned_data
                 , LATERAL FLATTEN(input => detail) f
-            {% elif db_name == 'bigquery' %}
+            {% elif db_name in ('bigquery','duckdb') %}
                 flatten_data AS f
                 UNPIVOT (
                     value FOR key IN {{json_keys|replace("'",'')}}
@@ -54,11 +54,13 @@
             , dtype
             , {{'"\'count\'"' if db_name=='snowflake' else 'count'}}
             , {{'"\'count_null\'"' if db_name=='snowflake' else 'count_null'}}
-            , ROUND({{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
+            , ROUND({{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE' if db_name =='bigquery' else ''}}(
                 {{'"\'count_null\'"::double' if db_name == 'snowflake' else 'CAST(count_null AS NUMERIC)'}}
-                , {{('"\'count\'"::double+"\'count_null\'"::double') if db_name == 'snowflake' else '(CAST(count AS NUMERIC)+CAST(count_null AS NUMERIC))'}}
-            ),3) AS percent_null
-            , * {{'EXCLUDE' if db_name == 'snowflake' else 'EXCEPT'}}(column_name, dtype
+                {{',' if db_name in ('bigquery','snowflake') else '/' }} {{('"\'count\'"::double+"\'count_null\'"::double') if db_name == 'snowflake' else '(CAST(count AS NUMERIC)+CAST(count_null AS NUMERIC))'}}
+            ),3)
+
+            AS percent_null
+            , * {{'EXCLUDE' if db_name in ('snowflake','duckdb') else 'EXCEPT'}}(column_name, dtype
                 , {{'"\'count\'"' if db_name=='snowflake' else 'count'}}
                 , {{'"\'count_null\'"' if db_name=='snowflake' else 'count_null'}}
             )

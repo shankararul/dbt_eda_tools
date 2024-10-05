@@ -12,17 +12,35 @@
 
       ROUND(
         {% if aggregation|lower in ['sum','count'] %}
-          {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
-            {{aggregation}}({{column_to_aggregate}})
-            ,
-            SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}})
-          )
-        {% elif aggregation|lower == 'countdistinct' %}
+          {% if db_name in ('snowflake','bigquery') %}
             {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
-              COUNT(DISTINCT {{column_to_aggregate}})
+              {{aggregation}}({{column_to_aggregate}})
               ,
-              SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}})
+              SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}})
             )
+          {% elif db_name =='duckdb' %}
+            IF(SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}}) !=0
+              , {{aggregation}}({{column_to_aggregate}})
+              /
+              SUM({{aggregation}}({{column_to_aggregate}})) OVER ({{level_agg}})
+              , NULL
+            )
+          {% endif %}
+        {% elif aggregation|lower == 'countdistinct' %}
+            {% if db_name in ('snowflake','bigquery') %}
+              {{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE'}}(
+                COUNT(DISTINCT {{column_to_aggregate}})
+                ,
+                SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}})
+              )
+            {% elif db_name =='duckdb' %}
+              IF(SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}}) !=0
+                , COUNT(DISTINCT {{column_to_aggregate}})
+                /
+                SUM(COUNT(DISTINCT {{column_to_aggregate}})) OVER ({{level_agg}})
+                , NULL
+              )
+            {% endif %}
         {% else %}
           NULL
         {% endif %}

@@ -1,9 +1,3 @@
-{{
-    config(
-        enabled = env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1
-    )
-}}
-
 WITH
 missing_values AS (
     {{dbt_eda_tools.get_missing_date('missing_day','date_day', ['country'], {}, 'DAY')}}

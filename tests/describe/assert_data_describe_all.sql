@@ -1,9 +1,3 @@
-{{
-    config(
-        enabled = env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1
-    )
-}}
-
 WITH
 describe_dataframe AS (
     {{dbt_eda_tools.describe('data_generator_enriched_describe', include='all')}}
@@ -15,27 +9,28 @@ WHERE
     AND
     (
         (
-        column_name NOT IN ('IS_SHORT_STRING', 'DATE_DAY', 'STR_LENGTH', 'COMPANY_NAME', 'COUNTRY')
+        column_name NOT IN ('is_short_string', 'date_day', 'str_length', 'company_name', 'country')
         )
-        OR column_name = 'IS_SHORT_STRING' AND NOT (
-            dtype = 'boolean' AND "'count'"=54800 AND "'unique'"=5
-            AND "'value_counts_top10'" = PARSE_JSON('{"false": 43840, "true": 10960}')
+        OR column_name = 'is_short_string' AND NOT (
+            dtype = 'boolean' AND CAST("count" AS INTEGER)=54800 AND CAST("unique_values" AS INTEGER)=5
+            AND CAST(value_counts_top10->>'false' AS INTEGER) = 43840 AND CAST(value_counts_top10->>'true' AS INTEGER) = 10960
         )
-        OR column_name = 'COMPANY_NAME' AND NOT (
-            dtype = 'text' AND "'count'"=54800 AND "'unique'"=5
-            AND "'value_counts_top10'" = PARSE_JSON('{"A": 10960,"AMZN": 10960,"FB": 10960,"GOG": 10960,"MSFT": 10960}')
+        OR column_name = 'company_name' AND NOT (
+            dtype = 'text' AND CAST("count" AS INTEGER)=54800 AND CAST("unique_values" AS INTEGER)=5
+            AND CAST(value_counts_top10->>'AMZN' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'A' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'FB' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'MSFT' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'GOG' AS INTEGER) = 10960
         )
-        OR column_name = 'COUNTRY' AND NOT (
-            dtype = 'text' AND "'count'"=54800 AND "'unique'"=5
-            AND "'value_counts_top10'" = PARSE_JSON('{"CA": 10960,"DE": 10960,"FR": 10960,"GB": 10960,"US": 10960}')
+        OR column_name = 'country' AND NOT (
+            dtype = 'text' AND CAST("count" AS INTEGER)=54800 AND CAST("unique_values" AS INTEGER)=5
+            AND CAST(value_counts_top10->>'CA' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'GB' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'FR' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'DE' AS INTEGER) = 10960 AND CAST(value_counts_top10->>'US' AS INTEGER) = 10960
+
         )
-        OR column_name = 'STR_LENGTH' AND NOT (
-            dtype = 'numeric' AND "'count'"=54800 AND "'unique'"=5
-            AND "'max'" = 6 AND "'min'" = 3 AND "'mean'" = 4.8
-            AND "'percentile_25'" = 4 AND "'percentile_50'" = 5 AND "'percentile_75'" = 6
+        OR column_name = 'str_length' AND NOT (
+            dtype = 'numeric' AND CAST("count" AS INTEGER)=54800 AND CAST("unique_values" AS INTEGER)=5
+            AND "max" = 6 AND "min" = 3 AND "mean" = 4.8
+            AND "percentile_25" = 4 AND "percentile_50" = 5 AND "percentile_75" = 6
         )
-        OR column_name = 'DATE_DAY' AND NOT (
-            dtype = 'date' AND "'count'"=54800 AND "'estimated_granularity'"='Daily' AND "'estimated_granularity_confidence'"= 1
-            AND "'max'" = '2024-12-31' AND "'min'" = '2019-01-01'
+        OR column_name = 'date_day' AND NOT (
+            dtype = 'date' AND CAST("count" AS INTEGER)=54800 AND "estimated_granularity"='"Daily"' AND CAST("estimated_granularity_confidence" AS INTEGER)= 1
+            AND "max" = '"2024-12-31 00:00:00"' AND "min" = '"2019-01-01 00:00:00"'
         )
     )

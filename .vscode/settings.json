@@ -1,4 +1,12 @@
 {
-    "dbt.queryLimit": 500,
-    "dbt.perspectiveTheme": "Monokai"
+    "dbt.queryLimit": 100,
+    "dbt.perspectiveTheme": "Monokai",
+    "dbt.deferConfigPerProject": {
+        "": {
+            "deferToProduction": true,
+            "favorState": true,
+            "manifestPathForDeferral": "c:\\Users\\shank\\Google Drive\\Jupyter Data\\Consulting\\External\\Kering\\Sourcev1\\Coding\\dbt_eda_tools\\target",
+            "manifestPathType": "local"
+        }
+    }
 }

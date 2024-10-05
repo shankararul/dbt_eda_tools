@@ -1,9 +1,3 @@
-{{
-    config(
-        enabled = env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1
-    )
-}}
-
 WITH
 describe_dataframe AS (
     {{dbt_eda_tools.describe('data_generator_enriched_describe')}}
@@ -22,29 +16,29 @@ WHERE
 
                 OR (
                     meta_data_key = 'COMPANY_NAME' AND (
-                    DETAIL:column_name::string <> 'COMPANY_NAME'
-                    OR DETAIL:count::integer <> 54800
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:unique::integer <> 5
-                    OR DETAIL:value_counts_top10:A::int <> 10960
-                    OR DETAIL:value_counts_top10:AMZN::int <> 10960
-                    OR DETAIL:value_counts_top10:FB::int <> 10960
-                    OR DETAIL:value_counts_top10:GOG::int <> 10960
-                    OR DETAIL:value_counts_top10:MSFT::int <> 10960
+                    CAST(detail->>'column_name' AS STRING) <> 'COMPANY_NAME'
+                    OR CAST(detail->>'count' AS INTEGER) <> 54800
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'unique_values' AS INTEGER) <> 5
+                    OR CAST(detail->>'value_counts_top10'->>'A' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'AMZN' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'FB' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'GOG' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'MSFT' AS INTEGER) <> 10960
                     )
                 )
 
                 OR (
                     meta_data_key = 'COUNTRY' AND (
-                    DETAIL:column_name::string <> 'COUNTRY'
-                    OR DETAIL:count::integer <> 54800
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:unique::integer <> 5
-                    OR DETAIL:value_counts_top10:A::int <> 10960
-                    OR DETAIL:value_counts_top10:AMZN::int <> 10960
-                    OR DETAIL:value_counts_top10:FB::int <> 10960
-                    OR DETAIL:value_counts_top10:GOG::int <> 10960
-                    OR DETAIL:value_counts_top10:MSFT::int <> 10960
+                    CAST(detail->>'column_name' AS STRING) <> 'COUNTRY'
+                    OR CAST(detail->>'count' AS INTEGER) <> 54800
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'unique_values' AS INTEGER) <> 5
+                    OR CAST(detail->>'value_counts_top10'->>'GB' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'US' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'FR' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'DE' AS INTEGER) <> 10960
+                    OR CAST(detail->>'value_counts_top10'->>'CA' AS INTEGER) <> 10960
                     )
                 )
             )
@@ -58,15 +52,15 @@ WHERE
 
                 OR (
                     meta_data_key = 'STR_LENGTH' AND (
-                    DETAIL:column_name::string <> 'STR_LENGTH'
-                    OR DETAIL:count::integer <> 54800
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:max::int <> 6
-                    OR DETAIL:min::int <> 3
-                    OR DETAIL:mean::float <> 4.8
-                    OR ROUND(DETAIL:percentile_25::float,0) <> 4
-                    OR ROUND(DETAIL:percentile_50::float,0) <> 5
-                    OR ROUND(DETAIL:percentile_75::float,0) <> 6
+                    CAST(detail->>'column_name' AS STRING) <> 'STR_LENGTH'
+                    OR CAST(detail->>'count' AS INTEGER) <> 54800
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'max' AS INTEGER) <> 6
+                    OR CAST(detail->>'min' AS INTEGER) <> 3
+                    OR ROUND(CAST(detail->>'mean' AS FLOAT),1) <> 4.8
+                    OR ROUND(CAST(detail->>'percentile_25' AS FLOAT),0) <> 4
+                    OR ROUND(CAST(detail->>'percentile_50' AS FLOAT),0) <> 5
+                    OR ROUND(CAST(detail->>'percentile_75' AS FLOAT),0) <> 6
                     )
                 )
             )
@@ -80,13 +74,13 @@ WHERE
 
                 OR (
                     meta_data_key = 'DATE_DAY' AND (
-                    DETAIL:column_name::string <> 'DATE_DAY'
-                    OR DETAIL:estimated_granularity::string <> 'Daily'
-                    OR DETAIL:estimated_granularity_confidence::float <> 1
-                    OR DETAIL:count::integer <> 54800
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:min::date <> DATE('2019-01-01')
-                    OR DETAIL:max::date <> DATE('2024-12-31')
+                    CAST(detail->>'column_name' AS STRING) <> 'DATE_DAY'
+                    OR CAST(detail->>'estimated_granularity' AS STRING) <> 'Daily'
+                    OR CAST(detail->>'estimated_granularity_confidence' AS INTEGER) <> 1
+                    OR CAST(detail->>'count' AS INTEGER) <> 54800
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'max' AS DATE) <> CAST('2019-01-01' AS DATE)
+                    OR CAST(detail->>'min' AS DATE) <> CAST('2024-12-31' AS DATE)
                     )
                 )
             )
@@ -100,11 +94,11 @@ WHERE
 
                 OR (
                     meta_data_key = 'IS_SHORT_STRING' AND (
-                    DETAIL:column_name::string <> 'IS_SHORT_STRING'
-                    OR DETAIL:count::integer <> 54800
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:value_counts_top10:false::float <> 43840
-                    OR DETAIL:value_counts_top10:true::float <> 10960
+                    CAST(detail->>'column_name' AS STRING) <> 'IS_SHORT_STRING'
+                    OR CAST(detail->>'count' AS INTEGER) <> 54800
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'value_counts_top10'->>'false' AS INTEGER) <> 43840
+                    OR CAST(detail->>'value_counts_top10'->>'true' AS INTEGER) <> 10960
                     )
                 )
             )

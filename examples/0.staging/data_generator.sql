@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized = 'view' if env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1 else 'ephemeral'
-    )
-}}
-
 WITH date_gen AS (
     {{ dbt_utils.date_spine(
         datepart="day",

@@ -1,9 +1,3 @@
-{{
-    config(
-        enabled = env_var('DBT_ENV_CUSTOM_ENV_EDA_TOOLS_DEVELOPER',0)| int == 1
-    )
-}}
-
 WITH
 describe_dataframe AS (
     {{dbt_eda_tools.describe('data_aggregated_yearly_granularity')}}
@@ -22,13 +16,13 @@ WHERE
 
                 OR (
                     meta_data_key = 'DATE_MIXED_GRANULARITY' AND (
-                    DETAIL:column_name::string <> 'DATE_MIXED_GRANULARITY'
-                    OR DETAIL:estimated_granularity::string <> 'Yearly'
-                    OR DETAIL:estimated_granularity_confidence::float <> 1
-                    OR DETAIL:count::integer <> 4
-                    OR DETAIL:count_null::integer <> 0
-                    OR DETAIL:min::date <> DATE('2019-01-01')
-                    OR DETAIL:max::date <> DATE('2022-01-01')
+                    CAST(detail->>'column_name' AS STRING) <> 'DATE_MIXED_GRANULARITY'
+                    OR CAST(detail->>'estimated_granularity' AS STRING)  <> '"Yearly"'
+                    OR CAST(detail->>'estimated_granularity_confidence' AS INTEGER) <> 1
+                    OR CAST(detail->>'count' AS INTEGER) <> 4
+                    OR CAST(detail->>'count_null' AS INTEGER) <> 0
+                    OR CAST(detail->>'min' AS DATE) <> CAST('2019-01-01' AS DATE)
+                    OR CAST(detail->>'max' AS DATE)<> CAST('2022-01-01' AS DATE)
                     )
                 )
             )

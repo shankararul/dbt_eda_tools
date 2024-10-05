@@ -37,10 +37,14 @@
                             , MAX({{col_name}}) AS max
                             {%  if data_type == 'numeric' %}
                                 , ROUND(AVG({{col_name}}),4) AS avg
-                                {% if db_name == 'snowflake'%}
+                                {% if db_name == 'snowflake' %}
                                 , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.25),'999.999999'),4) AS percentile_25
                                 , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.5),'999.999999'),4) AS percentile_50
                                 , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.75),'999.999999'),4) AS percentile_75
+                                {% elif db_name == 'duckdb' %}
+                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.25),4) AS percentile_25
+                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.5),4) AS percentile_50
+                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.75),4) AS percentile_75
                                 {% elif db_name == 'bigquery' %}
                                 , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(25)],4) AS percentile_25
                                 , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(50)],4) AS percentile_50
@@ -55,7 +59,7 @@
 
                     , SUM(COUNT({{col_name}})) OVER () AS cnt_total
                     , SUM(COUNT(DISTINCT {{col_name}})) OVER () AS cnt_unique
-                    , {{'COUNT_IF' if db_name=='snowflake' else 'COUNTIF'}}({{col_name}} IS NULL) AS cnt_null
+                    , {{'COUNT_IF' if db_name in ('snowflake','duckdb') else 'COUNTIF'}}({{col_name}} IS NULL) AS cnt_null
 
                 FROM {{ref(model_name)}}
 
@@ -81,7 +85,7 @@
                     , 'count_null' , MAX(cnt_null) -- needs to be max not min otherwise always zero
                     {% if data_type in ('text', 'boolean') %}
                         {% if data_type == 'text' %}
-                            , 'unique' , MIN(cnt_unique)
+                            , 'unique_values' , MIN(cnt_unique)
                         {% endif %}
                         , 'value_counts_top10',
                             {{'OBJECT_AGG' if db_name == 'snowflake' else 'ARRAY_AGG'}}

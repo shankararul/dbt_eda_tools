@@ -10,7 +10,7 @@
             SELECT
                     DISTINCT
                     '{{key}}' AS identifier
-                    , {{'CAST(NULL AS VARCHAR)' if db_name=='duckdb' else NULL}} AS detail
+                    , '' AS detail
                     , nbr_of_columns
                     , nbr_of_text_columns
                     , nbr_of_date_columns
@@ -43,7 +43,7 @@
                 20 + ROW_NUMBER() OVER (ORDER BY data_type) AS index_pos
                 , column_name AS meta_data_key
                 , '{{key}}' AS identifier
-                , {{'CAST(NULL AS VARCHAR)' if db_name=='duckdb' else NULL}} AS detail
+                , '' AS detail
                 , CAST(data_type AS STRING) AS meta_data_value
             FROM {{table_name}}
         )
@@ -53,7 +53,7 @@
                     0 AS index_pos
                     , {{'UPPER' if db_name=='snowflake' else ''}}('nbr_of_rows') AS meta_data_key
                     , 'dataset' AS identifier
-                    , {{'CAST(NULL AS VARCHAR)' if db_name=='duckdb' else NULL}} AS detail
+                    , '' AS detail
                     , CAST(COUNT(*) AS STRING) AS meta_data_value
             FROM {{ table_name }}
             GROUP BY ALL
