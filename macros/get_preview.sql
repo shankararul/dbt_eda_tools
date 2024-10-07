@@ -30,7 +30,6 @@
         {%- if total_columns > nbr_of_columns and headers.insert(nbr_of_columns-2,'..') %}{% endif -%}
 
         {% if total_columns > nbr_of_columns and head_rows.items()|list|length %}
-            -- need to de-uglify this
             {% set last_value = (head_rows.items()|list)[-2][0] | string %}
             {% set formatted_item = "{}".format(last_value if last_value|length <total_length_field else last_value[:total_length_field]+".." ) %}
             {%- if headers.insert(nbr_of_columns,formatted_item) %}{% endif -%}
