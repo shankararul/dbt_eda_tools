@@ -55,8 +55,8 @@
             , {{'"\'count\'"' if db_name=='snowflake' else 'count'}}
             , {{'"\'count_null\'"' if db_name=='snowflake' else 'count_null'}}
             , ROUND({{'DIV0NULL' if db_name=='snowflake' else 'SAFE_DIVIDE' if db_name =='bigquery' else ''}}(
-                {{'"\'count_null\'"::double' if db_name == 'snowflake' else 'CAST(count_null AS NUMERIC)'}}
-                {{',' if db_name in ('bigquery','snowflake') else '/' }} {{('"\'count\'"::double+"\'count_null\'"::double') if db_name == 'snowflake' else '(CAST(count AS NUMERIC)+CAST(count_null AS NUMERIC))'}}
+                {{'"\'count_null\'"::double' if db_name == 'snowflake' else 'SAFE_CAST(count_null AS NUMERIC)' if db_name =='bigquery' else 'TRY_CAST(count_null AS NUMERIC)'}}
+                {{',' if db_name in ('bigquery','snowflake') else '/' }} {{('"\'count\'"::double+"\'count_null\'"::double') if db_name == 'snowflake' else '(SAFE_CAST(count AS NUMERIC)+SAFE_CAST(count_null AS NUMERIC))' if db_name =='bigquery' else '(TRY_CAST(count AS NUMERIC)+TRY_CAST(count_null AS NUMERIC))'}}
             ),3)
 
             AS percent_null

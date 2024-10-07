@@ -52,7 +52,7 @@
                                 {% endif %}
                             {%  elif data_type == 'date' %}
                                 , MIN('{{results_granularity[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
-                                , MIN({{results_granularity[conditional_estimated_granularity_confidence_name][0]}}) AS estimated_granularity_confidence
+                                , {{'TRY_CAST' if db_name in ('snowflake','duckdb') else 'SAFE_CAST'}}(MIN('{{results_granularity[conditional_estimated_granularity_confidence_name][0]}}') AS NUMERIC) AS estimated_granularity_confidence
                             {% endif %}
                     {% endif %}
 
