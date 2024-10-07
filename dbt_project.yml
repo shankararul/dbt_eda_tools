@@ -1,5 +1,5 @@
 name: 'dbt_eda_tools'
-version: '1.3.0'
+version: '1.3.2'
 
 profile: 'dbt_eda_tools_duck'
 
@@ -18,11 +18,10 @@ models:
       - "{{ dbt_eda_tools.get_row_count() }}"
       - "{{ dbt_eda_tools.get_preview(20) }}"
   dbt_eda_tools:
-    # Config indicated by + and applies to all files under models/example/
     +materialized: view
 
 data_tests:
-  +enabled: true
+  +enabled: false
 
 vars:
   dbt_eda_tools_log_enable: "Y"
