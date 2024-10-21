@@ -248,12 +248,12 @@ dbt_project.yml
 ...
 ...
 vars:
-  dbt_eda_tools_log_enable: "Y"
+  dbt_eda_tools_log_enable: true
 
 ```
 
 ```
-Add the dbt_eda_tools_log_enable variable to your dbt_project.yml and set it to "Y". This will enable logging of the row count and preview for each model.
+Add the dbt_eda_tools_log_enable variable to your dbt_project.yml and set it to true. This will enable logging of the row count and preview for each model.
 ```
 
 ### Get Row count

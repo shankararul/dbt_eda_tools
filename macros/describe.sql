@@ -1,5 +1,9 @@
+
 {% macro describe(model_name, include=None) %}
-    {{ return(adapter.dispatch('describe', 'dbt_eda_tools')(model_name,include)) }}
+    -- depends_on: {{ ref(model_name) }}
+    {% if execute and load_relation(ref(model_name)) %}
+        {{ return(adapter.dispatch('describe', 'dbt_eda_tools')(model_name,include)) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro default__describe(model_name,include) %}

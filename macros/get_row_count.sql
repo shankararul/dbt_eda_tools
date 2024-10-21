@@ -8,7 +8,7 @@
         SELECT count(*)FROM {{ this }}
     {% endset %}
 
-    {% if var('dbt_eda_tools_log_enable','N') == 'Y'  %}
+    {% if var('dbt_eda_tools_log_enable',false)  %}
         {% set row_count = dbt_utils.get_single_value(sql_statement) %}
 
         {% set headers = ['Row count::  '+this.name] %}

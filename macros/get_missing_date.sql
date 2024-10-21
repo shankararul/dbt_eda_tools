@@ -1,5 +1,8 @@
 {% macro get_missing_date(model_name, date_col, dimensions, filters, expected_frequency) %}
-    {{ return(adapter.dispatch('get_missing_date', 'dbt_eda_tools')(model_name, date_col, dimensions, filters, expected_frequency)) }}
+    -- depends_on: {{ ref(model_name) }}
+    {% if execute and load_relation(ref(model_name)) %}
+      {{ return(adapter.dispatch('get_missing_date', 'dbt_eda_tools')(model_name, date_col, dimensions, filters, expected_frequency)) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro default__get_missing_date(model_name, date_col, dimensions, filters, expected_frequency) %}

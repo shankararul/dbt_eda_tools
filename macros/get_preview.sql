@@ -8,7 +8,7 @@
         SELECT * FROM {{ this }} LIMIT {{nbr_rows}}
     {% endset %}
 
-    {% if var('dbt_eda_tools_log_enable','N') == 'Y'  %}
+    {% if var('dbt_eda_tools_log_enable',false)  %}
         {% set head_rows = dbt_utils.get_query_results_as_dict(sql_statement) %}
 
         {% set rows = head_rows.values() | list %}

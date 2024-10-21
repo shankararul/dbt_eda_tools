@@ -1,9 +1,9 @@
 name: 'dbt_eda_tools'
-version: '1.3.4'
+version: '1.3.5'
 
 profile: 'dbt_eda_tools_duck'
 
-# model-paths: ["examples"]
+model-paths: ["examples"]
 test-paths: ["tests"]
 macro-paths: ["macros"]
 
@@ -14,6 +14,7 @@ clean-targets:
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 
 models:
+  +enabled: "{{ true if target.name == 'eda_dev' else false }}"
   +post-hook:
       - "{{ dbt_eda_tools.get_row_count() }}"
       - "{{ dbt_eda_tools.get_preview(20) }}"
@@ -21,7 +22,7 @@ models:
     +materialized: view
 
 data_tests:
-  +enabled: false
+  +enabled: "{{ true if target.name == 'eda_dev' else false }}"
 
 vars:
-  dbt_eda_tools_log_enable: "Y"
+  dbt_eda_tools_log_enable: "{{ true if target.name == 'eda_dev' else false }}"
