@@ -1,5 +1,18 @@
 version: 2
 macros:
+  - name: describe
+    description: The macro describes the structure of the dataset along with the column types. A loose and close implementation of pandas.describe().
+    arguments:
+      - name: model_name
+        type: string
+        description: The DBT model which needs to be described.
+      - name: include
+        type: list or string
+        description: Optional filter for column data types. Can be an array ['text','boolean','numeric','date'] or string 'all'. If None, analyzes all column types.
+      - name: column_filter
+        type: list
+        description: "Optional list of specific column names to analyze. When provided, only these columns will be described. Example: ['column1', 'column2']. Works alongside include parameter."
+
   - name: get_missing_date
     description: The macro calculates all the missing dates in the model for the specificied dimensions and input filter conditions.
     arguments:
@@ -35,101 +48,6 @@ macros:
         type: string
         description: An array of columns to aggregate at the specified level.
 
-  - name: describe
-    description: The macro describes the structure of the dataset along with the column types. A loose and close implementation of pandas.describe().
-    arguments:
-      - name: model_name
-        type: string
-        description: The DBT model which needs to be described.
-      - name: include
-        type: list or string
-        description: Optional filter for column data types. Can be an array ['text','boolean','numeric','date'] or string 'all'. If None, analyzes all column types.
-      - name: column_filter  
-        type: list
-        description: "Optional list of specific column names to analyze. When provided, only these columns will be described. Example: ['column1', 'column2']. Works alongside include parameter."
-
-  - name: fetch_information_metadata
-    description: The information_schema table which houses the table metadata lives in different locations in bigquery and snowflake. This macro returns the right paths to these tables based on the database.
-    arguments:
-      - name: model_name
-        type: string
-        description: The DBT model for which the information_schema needs to be fetched.
-
-  - name: fetch_column_metadata
-    description: "Fetch metadata about the columns in a given table, specifically the data type, count, top 10 unique count, and null count of each text column. The macro first filters the metadata table to only include columns with a data type of 'text', then executes a SQL query to fetch the column metadata for those text columns. The results are then transformed into a JSON object containing the column name, count, unique count, and null count. Output returned as CTE."
-
-    arguments:
-      - name: model_name
-        type: string
-        description: The DBT model that the column metadata is being fetched for.
-      - name: output_name
-        type: string
-        description: The name to use for the output CTE.
-      - name: data_type
-        type: string
-        description: Fetch metadata for columns filtered by provided data_type
-      - name: full_path
-        type: string
-        description: The full path to the information_schema table being queried.
-      - name: db_name
-        type: string
-        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
-      - name: table_name
-        type: string
-        description: The name of the table being queried.
-      - name: column_filter
-        type: list
-        description: "Optional list of column names to filter the metadata analysis to specific columns. When provided, only the specified columns will be analyzed and returned. Example: ['column1', 'column2', 'column3']. If None, all columns of the specified data type will be analyzed."
-
-  - name: fetch_meta_data
-    description: "Retrieves metadata about the columns in a given table. It returns a common table expression (CTE) named `meta_data` that contains the following information for each column in the table
-    >> `column_name`: The name of the column
-    >> `data_type`: The data type of the column
-    >> `nbr_of_columns`: The total number of columns in the table
-    >> `data_type_input`: The categorized data type of the column (e.g. 'text', 'date', 'numeric', 'boolean', 'time')
-    >>  `nbr_of_<data_type>_columns`: The number of columns of each categorized data type
-
-    Output returned as CTE"
-
-    arguments:
-      - name: output_name
-        type: string
-        description: The name to use for the output CTE.
-      - name: full_path
-        type: string
-        description: The full path to the information_schema table being queried.
-      - name: db_name
-        type: string
-        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
-      - name: table_name
-        type: string
-        description: The name of the table being queried.
-
-  - name: filter_meta_data
-    description: "The macro uses conditional logic to generate the appropriate metadata based on the `key` parameter. It supports three different types of metadata:
-    >> `dataset`: This generates a set of metadata about the overall dataset, including the number of columns, text columns, date columns, numeric columns, boolean columns, and time columns.
-    >> `column`: This generates a set of metadata about each column in the table, including the column name and data type.
-    >> `rowcount`: This generates a single metadata item with the total number of rows in the table.
-    Output returned as CTE"
-
-    arguments:
-      - name: output_name
-        type: string
-        description: The name to use for the output CTE.
-      - name: key
-        type: string
-        description: The type of metadata to generate (one of 'dataset', 'column', or 'rowcount').
-      - name: table_name
-        type: string
-        description: The name of the table to generate metadata for.
-      - name: db_name
-        type: string
-        description: The name of the database, used to handle differences in SQL syntax between Snowflake and other databases.
-
-  - name: fetch_db
-    description: Determines the database adapter being used in the current context. It dispatches to different implementation macros based on the current adapter, returning a string representing the database type. The available implementations are Bigquery and Snowflake
-
-
   - name: get_preview
     description: Returns the first few rows of a table
     arguments:
@@ -142,22 +60,16 @@ macros:
 
   - name: estimate_build_cost
     description: >
-      Performs a BigQuery dry run for each compiled model and estimates the total
-      bytes scanned and cost (USD) before executing a dbt build. Requires the
-      `bq` CLI to be installed and authenticated. BigQuery only.
-    arguments:
-      - name: select
-        type: list
-        description: >
-          Optional list of model names to estimate. If omitted, all models in
-          the project are included. Example: ['my_model', 'other_model']
+      Reports the actual GB scanned and estimated cost (USD) for the current dbt invocation.
+      Designed to run as an on-run-end hook in dbt_project.yml. After each dbt run/build/test,
+      it queries INFORMATION_SCHEMA.JOBS_BY_USER to find all BigQuery jobs tagged with the
+      current dbt invocation ID and aggregates their total bytes billed.
+      BigQuery only. Requires the service account to have bigquery.jobs.list permission
+      (granted via roles/bigquery.resourceViewer or roles/bigquery.user at project level).
 
-  - name: print_pretty_table
-    description: Logs the table in a pretty format
-    arguments:
-      - name: headers
-        type: string
-        description: The headers of the table in list format. Ex ['Col1','Col2','Col3']
-      - name: rows
-        type: string
-        description: The rows of the table in list format. Ex [['R1C1','R1C2','R1C3'],['R2C1','R2C2','R2C3']]
+      Usage in dbt_project.yml:
+        on-run-end:
+          - "{{ dbt_eda_tools.estimate_build_cost() }}"
+
+      Or run manually:
+        dbt run-operation estimate_build_cost

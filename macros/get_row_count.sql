@@ -4,6 +4,10 @@
 
 {% macro default__get_row_count() %}
 
+    {% if this is none or this.name is none %}
+        {% do return('') %}
+    {% endif %}
+
     {% set sql_statement %}
         SELECT count(*)FROM {{ this }}
     {% endset %}
