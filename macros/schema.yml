@@ -41,6 +41,12 @@ macros:
       - name: model_name
         type: string
         description: The DBT model which needs to be described.
+      - name: include
+        type: list or string
+        description: Optional filter for column data types. Can be an array ['text','boolean','numeric','date'] or string 'all'. If None, analyzes all column types.
+      - name: column_filter  
+        type: list
+        description: "Optional list of specific column names to analyze. When provided, only these columns will be described. Example: ['column1', 'column2']. Works alongside include parameter."
 
   - name: fetch_information_metadata
     description: The information_schema table which houses the table metadata lives in different locations in bigquery and snowflake. This macro returns the right paths to these tables based on the database.
@@ -50,11 +56,7 @@ macros:
         description: The DBT model for which the information_schema needs to be fetched.
 
   - name: fetch_column_metadata
-    description: "Fetch metadata about the columns in a given table, specifically the data type, count, top 10 unique count, and null count of each text column.
-
-    The macro first filters the metadata table to only include columns with a data type of 'text', then executes a SQL query to fetch the column metadata for those text columns. The results are then transformed into a JSON object containing the column name, count, unique count, and null count.
-
-    Output returned as CTE."
+    description: "Fetch metadata about the columns in a given table, specifically the data type, count, top 10 unique count, and null count of each text column. The macro first filters the metadata table to only include columns with a data type of 'text', then executes a SQL query to fetch the column metadata for those text columns. The results are then transformed into a JSON object containing the column name, count, unique count, and null count. Output returned as CTE."
 
     arguments:
       - name: model_name
@@ -75,6 +77,9 @@ macros:
       - name: table_name
         type: string
         description: The name of the table being queried.
+      - name: column_filter
+        type: list
+        description: "Optional list of column names to filter the metadata analysis to specific columns. When provided, only the specified columns will be analyzed and returned. Example: ['column1', 'column2', 'column3']. If None, all columns of the specified data type will be analyzed."
 
   - name: fetch_meta_data
     description: "Retrieves metadata about the columns in a given table. It returns a common table expression (CTE) named `meta_data` that contains the following information for each column in the table
@@ -134,6 +139,18 @@ macros:
 
   - name: get_row_count
     description: Returns the number of rows in a table
+
+  - name: estimate_build_cost
+    description: >
+      Performs a BigQuery dry run for each compiled model and estimates the total
+      bytes scanned and cost (USD) before executing a dbt build. Requires the
+      `bq` CLI to be installed and authenticated. BigQuery only.
+    arguments:
+      - name: select
+        type: list
+        description: >
+          Optional list of model names to estimate. If omitted, all models in
+          the project are included. Example: ['my_model', 'other_model']
 
   - name: print_pretty_table
     description: Logs the table in a pretty format
