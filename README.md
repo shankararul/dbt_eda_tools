@@ -195,9 +195,9 @@ GROUP BY 1,2
 ### Describe
 
 ```sh
-describe('model_name', include=None)
+describe('model_name', include=None, column_filter=None)
 
- Include can take an array ['text','boolean','numeric','date'] or a single string 'all'. If none is provided, returns meta data on the entire dataset.
+ Include can take an array ['text','boolean','numeric','date'] or a single string 'all'. If none is provided, returns meta data on the entire dataset. If column_filter is provided, returns meta data on the specified columns.
 ```
 
 ### [Example 1](examples/public/describe/describe_ex1.sql)
@@ -238,6 +238,20 @@ describe('model_name', include=None)
 > 👓 Explanation
  ```
  Filters the column metadata for the types provided. In this case, text, boolean and numeric columns are returned.
+ ```
+### [Example 4](examples/public/describe/describe_ex6.sql)
+> ➡️ Input
+```sh
+{{dbt_eda_tools.describe('data_generator_enriched_describe', column_filter=['is_short_string','country','str_length'])}}
+```
+
+> ⬅️ Output
+<img align="center" src="./images/describe_ex6.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
+
+
+> 👓 Explanation
+ ```
+ Filters the column metadata for the specific columns. In this case, the meta data for is_short_string, country and str_length columns are returned.
  ```
 
 ## Debug/Preview in the terminal

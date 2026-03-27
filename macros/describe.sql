@@ -1,12 +1,12 @@
 
-{% macro describe(model_name, include=None) %}
+{% macro describe(model_name, include=None, column_filter=None) %}
     -- depends_on: {{ ref(model_name) }}
     {% if execute and load_relation(ref(model_name)) %}
-        {{ return(adapter.dispatch('describe', 'dbt_eda_tools')(model_name,include)) }}
+        {{ return(adapter.dispatch('describe', 'dbt_eda_tools')(model_name,include, column_filter)) }}
     {% endif %}
 {% endmacro %}
 
-{% macro default__describe(model_name,include) %}
+{% macro default__describe(model_name,include, column_filter) %}
 
     {% set information_metadata = ((dbt_eda_tools.fetch_information_metadata(model_name)) | replace("'", "")| replace("[", " ")| replace("]", " ")  | trim).split(',') %}
 
@@ -20,7 +20,7 @@
     WITH
     {# fetch meta data about the table from the information schema #}
     dummy AS (SELECT 1)
-    {% if not include %}
+    {% if not include and not column_filter %}
         , {{dbt_eda_tools.fetch_meta_data('meta_data', full_path, db_name, table_name)}}
         {# filter and prepare the meta data for the dataset #}
         , {{dbt_eda_tools.filter_meta_data('dataset_info', 'dataset', 'meta_data', db_name)}}
@@ -32,10 +32,10 @@
         , {{dbt_eda_tools.assemble_data(['dataset_info','rowcount_info','column_info'],['index_pos','meta_data_key','meta_data_value','identifier','detail'],'assembled_result', db_name)}}
     {% endif %}
     {% for dtype in dtype_loop %}
-        , {{dbt_eda_tools.fetch_column_metadata(model_name,'column_detail_info_'+dtype, dtype, full_path, db_name, table_name)}}
+        , {{dbt_eda_tools.fetch_column_metadata(model_name,'column_detail_info_'+dtype, dtype, full_path, db_name, table_name, column_filter)}}
     {% endfor %}
 
-    {% if not include %}
+    {% if not include and not column_filter %}
         {{ dbt_eda_tools.summarize_dataset(db_name)}}
     {% else %}
         {{ dbt_eda_tools.summarize_dataset(db_name, dtype_loop)}}

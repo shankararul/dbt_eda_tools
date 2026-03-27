@@ -1,14 +1,24 @@
-{% macro fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name) %}
-    {{ return(adapter.dispatch('fetch_column_metadata', 'dbt_eda_tools')(model_name, output_name, data_type, full_path, db_name, table_name)) }}
+{% macro fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name, column_filter) %}
+    {{ return(adapter.dispatch('fetch_column_metadata', 'dbt_eda_tools')(model_name, output_name, data_type, full_path, db_name, table_name, column_filter)) }}
 {% endmacro %}
 
-{% macro default__fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name) %}
+{% macro default__fetch_column_metadata(model_name, output_name, data_type, full_path, db_name, table_name, column_filter) %}
 
     {# filter the metadata table to only include columns with a data type of 'text'. #}
     {% set meta_data_query %}
         WITH
         {{dbt_eda_tools.fetch_meta_data('meta_data', full_path, db_name, table_name)}}
-        SELECT column_name FROM meta_data WHERE data_type_input = '{{data_type}}'
+        SELECT
+            column_name
+        FROM meta_data
+        WHERE data_type_input = '{{data_type}}'
+        {% if column_filter %}
+            AND column_name IN (
+                {% for col in column_filter -%}
+                '{{col}}'{% if not loop.last %},{% endif %}
+                {%- endfor %}
+            )
+        {% endif %}
     {% endset %}
 
     {% set conditional_col_name = 'COLUMN_NAME' if db_name == 'snowflake' else 'column_name' %}
