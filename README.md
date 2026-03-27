@@ -318,6 +318,36 @@ models:
 > ⬅️ Output
 <img align="center" src="./images/get_preview.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
+### Estimate Build Cost (BigQuery)
+
+```sh
+dbt_project.yml
+----------------
+...
+...
+on-run-end:
+    - "{{ dbt_eda_tools.estimate_build_cost() }}"
+```
+
+> 👓 Explanation
+```
+Runs at the end of each dbt invocation and reports the total GB scanned and estimated cost (USD)
+for the current run/build/test.
+
+It uses BigQuery INFORMATION_SCHEMA.JOBS_BY_USER and filters on the current dbt invocation ID.
+```
+
+💁 Requirements
+- BigQuery adapter only.
+- The executing service account/user must have permission to read jobs metadata (for example `bigquery.jobs.list`).
+
+💡 Tip
+- You can also run it manually:
+
+```sh
+dbt run-operation estimate_build_cost
+```
+
 
 # 🔧 Contribution
 If you'd like to contribute, please do open a Pull Request or an Issue. Feel free to [reach out to me](https://linkedin.com/in/shankararul) should you have any questions.

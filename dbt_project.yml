@@ -1,9 +1,9 @@
 name: "dbt_eda_tools"
 version: "1.3.7"
 
-profile: "dbt_eda_tools_duck"
+profile: "dbt_eda_tools_bq"
 
-# model-paths: ["examples"]
+model-paths: ["examples"]
 test-paths: ["tests"]
 macro-paths: ["macros"]
 
@@ -20,6 +20,9 @@ models:
     - "{{ dbt_eda_tools.get_preview(20) }}"
   dbt_eda_tools:
     +materialized: view
+
+on-run-end:
+  - "{{ dbt_eda_tools.estimate_build_cost() }}"
 
 data_tests:
   +enabled: "{{ true if target.name == 'eda_dev' else false }}"

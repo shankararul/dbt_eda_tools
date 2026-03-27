@@ -4,6 +4,10 @@
 
 {% macro default__get_preview(nbr_rows) %}
 
+    {% if this is none or this.name is none %}
+        {% do return('') %}
+    {% endif %}
+
     {% set sql_statement %}
         SELECT * FROM {{ this }} LIMIT {{nbr_rows}}
     {% endset %}
