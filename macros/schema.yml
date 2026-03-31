@@ -67,9 +67,6 @@ macros:
       BigQuery only. Requires the service account to have bigquery.jobs.list permission
       (granted via roles/bigquery.resourceViewer or roles/bigquery.user at project level).
 
-      Usage in dbt_project.yml:
-        on-run-end:
-          - "{{ dbt_eda_tools.estimate_build_cost() }}"
 
       Or run manually:
         dbt run-operation estimate_build_cost

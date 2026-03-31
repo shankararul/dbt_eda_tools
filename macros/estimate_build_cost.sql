@@ -4,7 +4,7 @@
 
 {% macro bigquery__estimate_build_cost() %}
 
-       {%- set audit_query -%}
+  {%- set audit_query -%}
     WITH latest_invocation AS (
       SELECT value AS id
       FROM `{{ target.project }}`.`region-{{ target.location }}`.INFORMATION_SCHEMA.JOBS_BY_USER,
@@ -39,4 +39,11 @@
     {%- endif -%}
   {%- endif -%}
 
+{% endmacro %}
+
+
+{% macro default__estimate_build_cost() %}
+  {{ dbt_eda_tools.print_pretty_table(
+          ['The estimate_build_cost macro supports only BQ for the moment'],
+    ) }}
 {% endmacro %}

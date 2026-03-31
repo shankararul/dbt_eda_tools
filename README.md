@@ -323,11 +323,8 @@ models:
 ```sh
 dbt_project.yml
 ----------------
-...
-...
-on-run-end:
-    - "{{ dbt_eda_tools.estimate_build_cost() }}"
 ```
+<img align="center" src="./images/call_cost_estimator.png" alt="describe structure" style='display:block; margin-left: auto;margin-right: auto;' height="auto">
 
 > 👓 Explanation
 ```
