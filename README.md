@@ -264,10 +264,10 @@ dbt_project.yml
 vars:
   dbt_eda_tools_log_enable: true
 
-```
+Add the `dbt_eda_tools_log_enable` variable to your `dbt_project.yml` and set it to `true`. This will enable logging of the row count, preview for each model and also the estimate_build_cost run end hook if called.
 
 ```
-Add the dbt_eda_tools_log_enable variable to your dbt_project.yml and set it to true. This will enable logging of the row count and preview for each model.
+
 ```
 
 ### Get Row count
@@ -332,6 +332,15 @@ Runs at the end of each dbt invocation and reports the total GB scanned and esti
 for the current run/build/test.
 
 It uses BigQuery INFORMATION_SCHEMA.JOBS_BY_USER and filters on the current dbt invocation ID.
+```
+
+💁 Cost Estimation Formula
+```
+Estimated Cost (USD) = total_bytes_billed / 1024⁴ × $6.25
+
+where:
+  total_bytes_billed / 1024⁴  →  converts bytes to TiB
+  $6.25 per TiB               →  BigQuery on-demand pricing (https://cloud.google.com/bigquery/pricing)
 ```
 
 💁 Requirements
