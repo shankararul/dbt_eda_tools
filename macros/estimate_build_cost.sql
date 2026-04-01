@@ -1,5 +1,7 @@
 {% macro estimate_build_cost() %}
-    {{ return(adapter.dispatch('estimate_build_cost', 'dbt_eda_tools')()) }}
+    {% if var('dbt_eda_tools_log_enable',false)  %}
+      {{ return(adapter.dispatch('estimate_build_cost', 'dbt_eda_tools')()) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro bigquery__estimate_build_cost() %}
