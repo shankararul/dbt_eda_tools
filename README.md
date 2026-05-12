@@ -39,6 +39,9 @@
 > ✅ **Timeseries column exploration**
 `Get summary statistics such as Start date, End date, estimated granularity of the timeseries (day,month,year), null values for timeseries columns`
 
+✅ **Find Null Columns**
+`Identifies columns containing null values or empty strings in a dbt model. Works as an ad-hoc model or as a post-hook logger.`
+
 ✅ **Debug Preview during dbt build/run**
 
 > ✅ **Get row count**
@@ -253,6 +256,67 @@ describe('model_name', include=None, column_filter=None)
  ```
  Filters the column metadata for the specific columns. In this case, the meta data for is_short_string, country and str_length columns are returned.
  ```
+
+### Find Null Columns
+
+```sh
+find_null_columns(model_name=None, column_filter=None)
+
+ Scans a model for columns containing null values or empty strings ('' for string columns).
+ Only columns with at least one null or empty value are returned, ordered by count descending.
+ column_filter is an optional list of column names to restrict the analysis to.
+```
+
+### [Example 1](examples/public/find_null_columns/find_null_columns_ex1.sql)
+> ➡️ Input
+```sh
+{{dbt_eda_tools.find_null_columns('set_null_values_columns')}}
+```
+
+> ⬅️ Output
+
+| column_name          | null_or_empty_count | pct_null_or_empty | total_rows |
+|----------------------|--------------------:|------------------:|-----------:|
+| col1_as_null         | 54800               | 100.0             | 54800      |
+| col2_as_empty_string | 54800               | 100.0             | 54800      |
+| col3_as_some_null    | 10960               | 20.0              | 54800      |
+
+> 👓 Explanation
+```
+Scans all columns in set_null_values_columns. String columns are checked for both nulls and empty strings ('').
+Non-string columns (numeric, date, boolean) are checked for nulls only.
+Only columns with at least one null or empty value appear in the output.
+```
+
+### [Example 2](examples/public/find_null_columns/find_null_columns_ex1.sql) — with column_filter
+> ➡️ Input
+```sh
+{{dbt_eda_tools.find_null_columns('set_null_values_columns', column_filter=['col2_as_empty_string', 'col3_as_some_null'])}}
+```
+
+> 👓 Explanation
+```
+Restricts the scan to the specified columns only.
+Useful when you want to monitor specific columns rather than scanning the entire model.
+```
+
+### Post-hook usage
+> ➡️ Input
+```sh
+dbt_project.yml
+----------------
+models:
+  +post-hook:
+      - "{{ dbt_eda_tools.find_null_columns() }}"
+```
+
+> 👓 Explanation
+```
+When called without arguments, find_null_columns runs as a post-hook after each model build.
+It prints a formatted table of null/empty columns to the terminal.
+Requires dbt_eda_tools_log_enable: true in your dbt_project.yml vars.
+If no null or empty columns are found, nothing is printed.
+```
 
 ## Debug/Preview in the terminal
 
