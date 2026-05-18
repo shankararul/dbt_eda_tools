@@ -1,9 +1,9 @@
-{% macro estimated_granularity(model_name, date_col) %}
-    {{ return(adapter.dispatch('estimated_granularity', 'dbt_eda_tools')(model_name, date_col)) }}
+{% macro estimated_granularity(model_name, date_col, db_name='bigquery') %}
+    {{ return(adapter.dispatch('estimated_granularity', 'dbt_eda_tools')(model_name, date_col, db_name)) }}
 {% endmacro %}
 
-{% macro default__estimated_granularity(model_name, date_col) %}
-
+{% macro default__estimated_granularity(model_name, date_col, db_name) %}
+    {% set quoted_col = dbt_eda_tools.quote_column(date_col, db_name) %}
     SELECT
         lag_bucketed AS estimated_granularity
         , {{dbt_eda_tools.percent_of_total('count_total','sum',3)}} AS estimated_granularity_confidence
@@ -19,10 +19,10 @@
                 , COUNT(*) AS count_total
             FROM (
                 SELECT
-                    {{date_col}}
-                    , {{datediff( 'LAG(' + date_col +',1) OVER (ORDER BY '+date_col+')', date_col, 'day')}} AS lags_day
+                    {{quoted_col}}
+                    , {{datediff( 'LAG(' + quoted_col +',1) OVER (ORDER BY '+ quoted_col +')', quoted_col, 'day')}} AS lags_day
                 FROM (
-                    SELECT DISTINCT {{date_col}}
+                    SELECT DISTINCT {{quoted_col}}
                     FROM {{ ref(model_name) }}
                 )
             )

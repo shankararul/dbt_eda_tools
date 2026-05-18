@@ -30,35 +30,37 @@
     {% if results[conditional_col_name] %}
         {# construct the column detail results #}
         {% for col_name in results[conditional_col_name]%}
+            {% set quoted_col = dbt_eda_tools.quote_column(col_name, db_name) %}
+            {% set cte_name = dbt_eda_tools.safe_cte_name(col_name) %}
 
             {% if data_type == 'date'%}
-                {% set results_granularity = dbt_utils.get_query_results_as_dict(dbt_eda_tools.estimated_granularity(model_name, col_name) ) %}
+                {% set results_granularity = dbt_utils.get_query_results_as_dict(dbt_eda_tools.estimated_granularity(model_name, col_name, db_name) ) %}
             {% endif %}
 
 
-            column_detail_{{col_name}} AS (
+            {{cte_name}} AS (
                 SELECT
                     1
                     {% if data_type in ('text','boolean') %}
-                        , {{col_name}}
+                        , {{quoted_col}}
                         , COUNT(*) AS cnt
                     {%  elif data_type in ('numeric','date') %}
-                            , MIN({{col_name}}) AS min
-                            , MAX({{col_name}}) AS max
+                            , MIN({{quoted_col}}) AS min
+                            , MAX({{quoted_col}}) AS max
                             {%  if data_type == 'numeric' %}
-                                , ROUND(AVG({{col_name}}),4) AS avg
+                                , ROUND(AVG({{quoted_col}}),4) AS avg
                                 {% if db_name == 'snowflake' %}
-                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.25),'999.999999'),4) AS percentile_25
-                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.5),'999.999999'),4) AS percentile_50
-                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{col_name}}, 0.75),'999.999999'),4) AS percentile_75
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{quoted_col}}, 0.25),'999.999999'),4) AS percentile_25
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{quoted_col}}, 0.5),'999.999999'),4) AS percentile_50
+                                , ROUND(TO_VARCHAR(APPROX_PERCENTILE({{quoted_col}}, 0.75),'999.999999'),4) AS percentile_75
                                 {% elif db_name == 'duckdb' %}
-                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.25),4) AS percentile_25
-                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.5),4) AS percentile_50
-                                , ROUND(APPROX_QUANTILE({{col_name}}, 0.75),4) AS percentile_75
+                                , ROUND(APPROX_QUANTILE({{quoted_col}}, 0.25),4) AS percentile_25
+                                , ROUND(APPROX_QUANTILE({{quoted_col}}, 0.5),4) AS percentile_50
+                                , ROUND(APPROX_QUANTILE({{quoted_col}}, 0.75),4) AS percentile_75
                                 {% elif db_name == 'bigquery' %}
-                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(25)],4) AS percentile_25
-                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(50)],4) AS percentile_50
-                                , ROUND(APPROX_QUANTILES({{col_name}}, 100)[OFFSET(75)],4) AS percentile_75
+                                , ROUND(APPROX_QUANTILES({{quoted_col}}, 100)[OFFSET(25)],4) AS percentile_25
+                                , ROUND(APPROX_QUANTILES({{quoted_col}}, 100)[OFFSET(50)],4) AS percentile_50
+                                , ROUND(APPROX_QUANTILES({{quoted_col}}, 100)[OFFSET(75)],4) AS percentile_75
                                 {% endif %}
                             {%  elif data_type == 'date' %}
                                 , MIN('{{results_granularity[conditional_estimated_granularity_name][0]}}') AS estimated_granularity
@@ -67,9 +69,9 @@
                     {% endif %}
 
 
-                    , SUM(COUNT({{col_name}})) OVER () AS cnt_total
-                    , SUM(COUNT(DISTINCT {{col_name}})) OVER () AS cnt_unique
-                    , {{'COUNT_IF' if db_name in ('snowflake','duckdb') else 'COUNTIF'}}({{col_name}} IS NULL) AS cnt_null
+                    , SUM(COUNT({{quoted_col}})) OVER () AS cnt_total
+                    , SUM(COUNT(DISTINCT {{quoted_col}})) OVER () AS cnt_unique
+                    , {{'COUNT_IF' if db_name in ('snowflake','duckdb') else 'COUNTIF'}}({{quoted_col}} IS NULL) AS cnt_null
 
                 FROM {{ref(model_name)}}
 
@@ -86,7 +88,9 @@
         {# turn the results into a json object #}
         , {{output_name}} AS (
             {% for col_name in results[conditional_col_name] %}
-            {% set non_null_json_key = "COALESCE("+col_name+","+("'NULL'" if data_type != 'boolean' else 'false')+")" %}
+            {% set quoted_col = dbt_eda_tools.quote_column(col_name, db_name) %}
+            {% set cte_name = dbt_eda_tools.safe_cte_name(col_name) %}
+            {% set non_null_json_key = "COALESCE("+quoted_col+","+("'NULL'" if data_type != 'boolean' else 'false')+")" %}
             SELECT
                 '{{col_name}}' AS column_name
                 , {{'OBJECT_CONSTRUCT' if db_name == 'snowflake' else 'JSON_OBJECT'}}(
@@ -117,7 +121,7 @@
                         {% endif %}
                     {% endif %}
                 ) AS detail
-            FROM column_detail_{{col_name}}
+            FROM {{cte_name}}
             {{ 'UNION ALL' if not loop.last else ''}}
         {% endfor %}
 
